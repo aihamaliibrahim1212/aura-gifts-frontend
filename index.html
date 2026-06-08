@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#ffffff;">
+<head>
+    <style>*{box-sizing:border-box;margin:0;padding:0}html{background:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;color:#1a1a1a;overflow-x:hidden}body{background:#fff;overflow-x:hidden}</style>
+    <meta charset="UTF-8"><meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Gifts | Art of Refined Gifting</title>
+    <meta name="description" content="Luxury, thoughtful, and personal gifts curated for every occasion. For corporate order inquiries contact aura.gifts.mv@gmail.com">
+    <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css?v=12">
+    <link rel="stylesheet" href="css/auth.css?v=4"><style>html,body{background:#fff;}</style>
+    
+    <script src="js/auth.js?v=1" defer></script>
+</head>
+<body>
+
+    <header id="header">
+        <div class="top-bar" id="top-bar-text">FOR QUERIES PLEASE CALL 9992070</div>
+        <div class="header-search-bar">
+            <a href="#" class="logo">
+                <img src="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717076/aura-gifts/logos/tdpoqlfhze5zkuvdppgw.jpg" alt="Aura Gifts" class="logo-wide" id="site-logo-wide">
+            </a>
+            <div class="header-search-wrap">
+                <i class="fas fa-search header-search-icon"></i>
+                <input type="text" id="hamper-search" placeholder="Search hampers..." autocomplete="off">
+            </div>
+            <div class="header-right">
+                <div id="auth-nav-btn"><script>(function(){var t=localStorage.getItem('aura_user_token'),u=null;if(t){try{u=JSON.parse(localStorage.getItem('aura_user'));}catch(e){}}var p=location.pathname.indexOf('/pages/')!==-1;var lo=p?'login.html':'pages/login.html';var ac=p?'account.html':'pages/account.html';function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}function ini(n){return(n||'?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();}var el=document.getElementById('auth-nav-btn');if(!el)return;if(u&&u.name){var av=u.avatar_url?'<img src="'+esc(u.avatar_url)+'" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border-gray);flex-shrink:0;">':'<span style="width:26px;height:26px;border-radius:50%;background:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.68rem;color:var(--text-dark);flex-shrink:0;">'+ini(u.name)+'</span>';el.innerHTML='<a href="'+ac+'" class="auth-header-btn" title="My Account">'+av+'<span class="auth-btn-label">'+esc(u.name.split(' ')[0])+'</span></a>';} else {el.innerHTML='<a href="'+lo+'" class="auth-header-btn" title="Sign In"><i class="fas fa-user" style="font-size:0.82rem;"></i><span class="auth-btn-label">Sign In</span></a>';}})();</script></div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+                <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <nav class="navbar" id="desktop-nav">
+                <div class="nav-links">
+                    <a href="pages/hampers.html">Instant Hampers</a>
+                    <a href="pages/personalised-hampers.html">Personalised Hampers</a>
+                    <a href="pages/create-your-own.html">Create Your Own</a>
+                    <a href="pages/corporate-orders.html">Corporate Orders</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <nav>
+            <a href="pages/hampers.html" onclick="closeMobileMenu()">Instant Hampers</a>
+            <a href="pages/personalised-hampers.html" onclick="closeMobileMenu()">Personalised Hampers</a>
+            <a href="pages/create-your-own.html" onclick="closeMobileMenu()">Create Your Own</a>
+            <a href="pages/corporate-orders.html" onclick="closeMobileMenu()">Corporate Orders</a>
+            <a href="pages/faq.html" onclick="closeMobileMenu()">FAQ</a>
+            <a href="mailto:aura.gifts.mv@gmail.com">Contact Us</a>
+        </nav>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="cart-close" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer" id="cart-footer"></div>
+    </div>
+
+    <!-- Banner Carousel -->
+    <div class="banner-carousel" id="banner-carousel">
+        <div class="banner-slides" id="banner-slides"></div>
+        <button class="banner-arrow banner-arrow-left" onclick="bannerPrev()" aria-label="Previous"></button>
+        <button class="banner-arrow banner-arrow-right" onclick="bannerNext()" aria-label="Next"></button>
+        <div class="banner-dots" id="banner-dots"></div>
+    </div>
+
+    <!-- Hampers Section -->
+    <section id="products" class="products" style="padding-top:48px;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Our Collection</span>
+                <h2>Hampers Worth Giving</h2>
+                <a href="pages/hampers.html" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:0.9rem;font-weight:600;color:var(--gold-dark);text-decoration:none;">
+                    View All Hampers <i class="fas fa-arrow-right" style="font-size:0.8rem;"></i>
+                </a>
+            </div>
+            <div class="products-grid" id="products-grid"></div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header centered">
+                <span class="section-label">Reviews</span>
+                <h2>Words from Our Customers</h2>
+                <p class="section-intro">The art of refined gifting, reflected in the people we've made smile.</p>
+            </div>
+        </div>
+        <!-- Infinite scroll carousel — full width, no container constraint -->
+        <div class="reviews-marquee-wrap">
+            <div class="reviews-marquee" id="reviews-grid"></div>
+        </div>
+    </section>
+
+    <!-- Corporate CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <span class="section-label">Corporate Orders</span>
+            <h2>Gifting at Scale, Done Right</h2>
+            <p>For corporate inquiries, bulk orders, and bespoke gifting experiences. reach us directly. We handle everything with the same care and refinement you'd expect from Aura Gifts.</p>
+            <a href="mailto:aura.gifts.mv@gmail.com" class="btn btn-gold btn-lg" style="display:inline-flex;">
+                <i class="fas fa-envelope"></i> aura.gifts.mv@gmail.com
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <span style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;">
+                            <span style="font-weight:800;color:white;">aura</span><span style="font-weight:400;color:rgba(255,255,255,0.7);">gifts</span>
+                        </span>
+                    </a>
+                    <p style="margin-top:14px;">Art of refined gifting. Luxury, thoughtful, and deeply personal gifts for every occasion. Corporate orders welcome.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/auragifts.mv/" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/hampers.html">All Hampers</a></li>
+                        <li><a href="pages/hampers.html">Instant Hampers</a></li>
+                        <li><a href="pages/personalised-hampers.html">Personalised Hampers</a></li>
+                        <li><a href="pages/create-your-own.html">Create Your Own</a></li>
+                        <li><a href="pages/faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/about.html">About Us</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="mailto:aura.gifts.mv@gmail.com">aura.gifts.mv@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="justify-content:center;">
+                <p>&copy; 2025 Aura Gifts. Art of refined gifting.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hamper Enquiry Modal -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+        <div class="modal" id="modal">
+            <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-header-block">
+                <div class="modal-icon"><i class="fas fa-gift"></i></div>
+            </div>
+            <h3 id="modal-title">Hamper</h3>
+            <p class="modal-price" id="modal-tag"></p>
+            <div class="delivery-form">
+                <label>Your Name</label>
+                <input type="text" placeholder="Your name" id="modal-sender">
+                <label>Your Email</label>
+                <input type="email" placeholder="your@email.com" id="modal-recipient">
+                <label>Message / Special Requests (optional)</label>
+                <textarea placeholder="Tell us about the occasion, quantity, or any special requirements..." id="modal-message"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gold btn-lg" style="width:100%;justify-content:center;" onclick="handleEnquiry()">
+                    <i class="fas fa-paper-plane"></i> Send Enquiry
+                </button>
+                <p style="text-align:center;margin-top:10px;font-size:0.78rem;color:var(--text-light);">
+                    We'll get back to you at <strong>aura.gifts.mv@gmail.com</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api-cache.js?v=11"></script>
+    <script>
+        // Immediately seed cache and preload images from SSR data
+        (function() {
+            if (!window.__SSR__) return;
+            // Seed banners cache only (banners don't change with orders)
+            if (window.__SSR__.banners) cacheSet('banners', window.__SSR__.banners);
+            // Do NOT cache products — always fetch fresh so stock changes appear immediately
+
+            // Preload all above-the-fold images
+            var urls = [];
+            (window.__SSR__.banners || []).forEach(function(b) { if (b.image_url && b.image_url.startsWith('http')) urls.push(b.image_url); });
+            (window.__SSR__.products || []).slice(0,6).forEach(function(p) { if (p.image_url && p.image_url.startsWith('http')) urls.push(p.image_url); });
+            urls.forEach(function(url) {
+                var link = document.createElement('link');
+                link.rel = 'preload'; link.as = 'image'; link.href = url;
+                document.head.appendChild(link);
+            });
+        })();
+    </script>
+    <script>
+        // ── Banner Carousel ── build from cache immediately, no flicker
+        (function() {
+            const track = document.getElementById('banner-slides');
+            const dotsContainer = document.getElementById('banner-dots');
+            if (!track) return;
+
+            function initCarousel() {
+                const originalSlides = Array.from(track.children);
+                const total = originalSlides.length;
+                if (!total) return;
+
+                const firstClone = originalSlides[0].cloneNode(true);
+                const lastClone  = originalSlides[total - 1].cloneNode(true);
+                track.appendChild(firstClone);
+                track.insertBefore(lastClone, originalSlides[0]);
+
+                let current = 1, timer, isTransitioning = false;
+                // Suppress transition during initial positioning to prevent
+                // the visible sweep when the page loads/refreshes mid-carousel
+                track.classList.add('no-transition');
+                track.style.transform = `translateX(-${current * 100}%)`;
+                void track.offsetWidth; // force reflow so the position is applied instantly
+                track.classList.remove('no-transition');
+
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < total; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'banner-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                    dot.addEventListener('click', () => { if (!isTransitioning) goTo(i + 1); });
+                    dotsContainer.appendChild(dot);
+                }
+
+                function updateDots() {
+                    dotsContainer.querySelectorAll('.banner-dot').forEach((d, i) => d.classList.toggle('active', i === current - 1));
+                }
+
+                function goTo(index) {
+                    if (isTransitioning) return;
+                    isTransitioning = true;
+                    current = index;
+                    track.classList.remove('no-transition');
+                    track.style.transform = `translateX(-${current * 100}%)`;
+                    updateDots();
+                    resetTimer();
+                }
+
+                track.addEventListener('transitionend', () => {
+                    isTransitioning = false;
+                    if (current === 0) {
+                        track.classList.add('no-transition');
+                        current = total;
+                        track.style.transform = `translateX(-${current * 100}%)`;
+                        void track.offsetWidth;
+                        track.classList.remove('no-transition');
+                    } else if (current === total + 1) {
+                        track.classList.add('no-transition');
+                        current = 1;
+                        track.style.transform = `translateX(-${current * 100}%)`;
+                        void track.offsetWidth;
+                        track.classList.remove('no-transition');
+                    }
+                });
+
+                function resetTimer() {
+                    clearInterval(timer);
+                    timer = setInterval(() => goTo(current + 1), 5000);
+                }
+
+                window.bannerNext = () => goTo(current + 1);
+                window.bannerPrev = () => goTo(current - 1);
+                resetTimer();
+                updateDots();
+
+                const carousel = document.getElementById('banner-carousel');
+                carousel.addEventListener('mouseenter', () => clearInterval(timer));
+                carousel.addEventListener('mouseleave', resetTimer);
+
+                let touchStartX = 0;
+                carousel.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+                carousel.addEventListener('touchend', e => {
+                    const diff = touchStartX - e.changedTouches[0].clientX;
+                    if (Math.abs(diff) > 40) diff > 0 ? bannerNext() : bannerPrev();
+                });
+            }
+
+            function buildSlides(banners) {
+                if (!banners || !banners.length) return;
+                // Preload images before rendering to avoid flicker
+                const urls = banners.map(b => b.image_url ? (b.image_url.startsWith('http') ? b.image_url : '/' + b.image_url) : '').filter(Boolean);
+                let loaded = 0;
+                function tryInit() {
+                    loaded++;
+                    if (loaded >= urls.length) {
+                        track.innerHTML = banners.map(b => {
+                            const src = b.image_url ? (b.image_url.startsWith('http') ? b.image_url : '/' + b.image_url) : '';
+                            return `<div class="banner-slide"><img src="${src}" alt="Banner" class="banner-slide-img"></div>`;
+                        }).join('');
+                        initCarousel();
+                    }
+                }
+                urls.forEach(url => {
+                    const img = new Image();
+                    img.onload = img.onerror = tryInit;
+                    img.src = url;
+                });
+                if (!urls.length) { track.innerHTML = banners.map(b => `<div class="banner-slide"><img src="" alt="Banner" class="banner-slide-img"></div>`).join(''); initCarousel(); }
+            }
+
+            // Slides are already in the HTML from SSR — wait for all images to decode before init
+            if (track.children.length > 0) {
+                const imgs = Array.from(track.querySelectorAll('.banner-slide-img'));
+                let loaded = 0;
+                function onImgReady() {
+                    loaded++;
+                    if (loaded >= imgs.length) initCarousel();
+                }
+                if (imgs.length === 0) {
+                    initCarousel();
+                } else {
+                    imgs.forEach(function(img) {
+                        if (img.complete && img.naturalWidth > 0) {
+                            onImgReady();
+                        } else {
+                            img.addEventListener('load',  onImgReady, { once: true });
+                            img.addEventListener('error', onImgReady, { once: true });
+                        }
+                    });
+                }
+            } else if (window.__SSR__ && window.__SSR__.banners && window.__SSR__.banners.length) {
+                // Fallback: build from SSR data if slides somehow missing
+                const ssrBanners = window.__SSR__.banners;
+                track.innerHTML = ssrBanners.map(b => {
+                    const src = b.image_url ? (b.image_url.startsWith('http') ? b.image_url : '/' + b.image_url) : '';
+                    return `<div class="banner-slide"><img src="${src}" alt="Banner" class="banner-slide-img" fetchpriority="high"></div>`;
+                }).join('');
+                initCarousel();
+            }
+
+            // Sync cache in background only
+            fetchCached('/api/banners', 'banners', function(banners, fromCache) {
+                if (fromCache) return;
+                // Don't re-render, just update cache
+            });
+        })();
+    </script>
+
+    <script src="js/main.js?v=10"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(function() {});
+        }
+    </script>
+    <script src="js/cart.js?v=10"></script>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+            document.getElementById('mobile-menu-overlay').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('open');
+            document.body.style.overflow = document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('mobile-menu-overlay').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    </script>
+</body>
+</html>

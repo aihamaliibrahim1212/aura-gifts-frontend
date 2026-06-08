@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Admin</title>
+  <style>html,body{background:#f8f8f6;}</style><link rel="stylesheet" href="/admin/static/admin.css?v=3" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .index-loader {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--off-white);
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border-gray);
+      border-top-color: var(--gold-dark);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .index-loader p {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="index-loader">
+    <div class="spinner"></div>
+    <p>Loading Aura Gifts Admin…</p>
+  </div>
+  <script>
+    var token = localStorage.getItem('aura_user_token');
+    var user  = null;
+    try { user = JSON.parse(localStorage.getItem('aura_user')); } catch(e) {}
+    if (token && user && (user.role === 'admin' || user.role === 'superadmin')) {
+      window.location.href = '/admin/dashboard.html';
+    } else {
+      // No admin access — go to main site login
+      window.location.href = '/pages/login.html';
+    }
+  </script>
+</body>
+</html>

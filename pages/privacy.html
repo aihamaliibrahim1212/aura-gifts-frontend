@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#ffffff;">
+<head>
+    <style>*{box-sizing:border-box;margin:0;padding:0}html{background:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;color:#1a1a1a;overflow-x:hidden}body{background:#fff;overflow-x:hidden}</style>
+    <meta charset="UTF-8"><meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Aura Gifts</title>
+    <meta name="description" content="Privacy Policy for Aura Gifts.">
+    <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css?v=12">
+    <link rel="stylesheet" href="../css/auth.css?v=4"><style>html,body{background:#fff;}</style>
+    <script>
+        // Blocking pre-render: inject cached content before first paint — zero flash
+        try {
+            var _pc = localStorage.getItem('ac_privacy');
+            if (_pc) {
+                var _pd = JSON.parse(_pc).data;
+                if (_pd && _pd.value) {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var el = document.getElementById('privacy-content');
+                        if (!el || el.children.length > 0) return;
+                        try {
+                            var s = JSON.parse(_pd.value);
+                            el.innerHTML = s.map(function(x){return (x.heading?'<h3>'+x.heading+'</h3>':'')+'<p>'+x.body.replace(/\n/g,'<br>')+'</p>';}).join('');
+                        } catch(e){ el.innerHTML = _pd.value.replace(/\n/g,'<br>'); }
+                    });
+                }
+            }
+        } catch(e){}
+    </script>
+    <style>
+        .page-hero {
+            padding: 40px 0 60px;
+            background: var(--off-white);
+            border-bottom: 1px solid var(--border-gray);
+            text-align: center;
+        }
+        .page-hero p { color: var(--text-mid); font-size: 1rem; margin-top: 10px; }
+        .legal-section { padding: 72px 0; background: var(--white); }
+        .legal-content { max-width: 760px; margin: 0 auto; }
+        .legal-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem; color: var(--text-dark);
+            margin: 36px 0 10px;
+        }
+        .legal-content h3:first-child { margin-top: 0; }
+        .legal-content p {
+            color: var(--text-mid); font-size: 0.95rem;
+            line-height: 1.8; margin-bottom: 12px;
+        }
+        .legal-content ul {
+            padding-left: 20px; margin-bottom: 12px;
+        }
+        .legal-content ul li {
+            color: var(--text-mid); font-size: 0.95rem;
+            line-height: 1.8; margin-bottom: 6px;
+        }
+        .legal-updated {
+            font-size: 0.82rem; color: var(--text-light);
+            margin-bottom: 40px; padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+    </style>
+    <script src="../js/auth.js?v=1" defer></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="top-bar" id="top-bar-text">FOR QUERIES PLEASE CALL 9992070</div>
+        <div class="header-search-bar">
+            <a href="../index.html" class="logo">
+                <img src="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717076/aura-gifts/logos/tdpoqlfhze5zkuvdppgw.jpg" alt="Aura Gifts" class="logo-wide" id="site-logo-wide">
+            </a>
+            <div class="header-search-wrap">
+                <i class="fas fa-search header-search-icon"></i>
+                <input type="text" id="hamper-search" placeholder="Search hampers..." autocomplete="off">
+            </div>
+            <div class="header-right"><div id="auth-nav-btn"><script>(function(){var t=localStorage.getItem('aura_user_token'),u=null;if(t){try{u=JSON.parse(localStorage.getItem('aura_user'));}catch(e){}}var p=location.pathname.indexOf('/pages/')!==-1;var lo=p?'login.html':'pages/login.html';var ac=p?'account.html':'pages/account.html';function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}function ini(n){return(n||'?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();}var el=document.getElementById('auth-nav-btn');if(!el)return;if(u&&u.name){var av=u.avatar_url?'<img src="'+esc(u.avatar_url)+'" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border-gray);flex-shrink:0;">':'<span style="width:26px;height:26px;border-radius:50%;background:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.68rem;color:var(--text-dark);flex-shrink:0;">'+ini(u.name)+'</span>';el.innerHTML='<a href="'+ac+'" class="auth-header-btn" title="My Account">'+av+'<span class="auth-btn-label">'+esc(u.name.split(' ')[0])+'</span></a>';} else {el.innerHTML='<a href="'+lo+'" class="auth-header-btn" title="Sign In"><i class="fas fa-user" style="font-size:0.82rem;"></i><span class="auth-btn-label">Sign In</span></a>';}})();</script></div><button class="cart-btn" onclick="toggleCart()"><i class="fas fa-shopping-basket"></i><span class="cart-count"></span></button><button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button></div>
+        </div>
+        <div class="container">
+            <nav class="navbar" id="desktop-nav">
+                <div class="nav-links">
+                    <a href="hampers.html">Instant Hampers</a>
+                    <a href="personalised-hampers.html">Personalised Hampers</a>
+                    <a href="create-your-own.html">Create Your Own</a>
+                    <a href="corporate-orders.html">Corporate Orders</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <nav>
+            <a href="hampers.html" onclick="closeMobileMenu()">Instant Hampers</a>
+            <a href="personalised-hampers.html" onclick="closeMobileMenu()">Personalised Hampers</a>
+            <a href="create-your-own.html" onclick="closeMobileMenu()">Create Your Own</a>
+            <a href="corporate-orders.html" onclick="closeMobileMenu()">Corporate Orders</a>
+            <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
+            <a href="mailto:aura.gifts.mv@gmail.com">Contact Us</a>
+        </nav>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Hero -->
+    <div class="page-hero">
+        <div class="container">
+            <span class="section-label">Legal</span>
+            <h1 style="font-size:2.8rem;">Privacy Policy</h1>
+            <p>How we collect, use, and protect your information.</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <section class="legal-section">
+        <div class="container">
+            <div class="legal-content" id="privacy-content"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">
+                        <span style="font-family:''Avenir Next'',''Avenir'',''Nunito'',sans-serif;letter-spacing:0.5px;">
+                            <span style="font-weight:800;color:white;">aura</span><span style="font-weight:400;color:rgba(255,255,255,0.7);">gifts</span>
+                        </span>
+                    </a>
+                    <p style="margin-top:14px;">Art of refined gifting. Luxury, thoughtful, and deeply personal gifts for every occasion. Corporate orders welcome.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/auragifts.mv/" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="hampers.html">All Hampers</a></li>
+                        <li><a href="hampers.html">Instant Hampers</a></li>
+                        <li><a href="personalised-hampers.html">Personalised Hampers</a></li>
+                        <li><a href="create-your-own.html">Create Your Own</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="mailto:aura.gifts.mv@gmail.com">aura.gifts.mv@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="justify-content:center;">
+                <p>&copy; 2025 Aura Gifts. Art of refined gifting.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/api-cache.js?v=11"></script>
+    <script>
+        fetchCached('/api/content/privacy_policy', 'privacy', (data) => {
+            const el = document.getElementById('privacy-content');
+            if (!el || !data || !data.value) return;
+            if (el.children.length > 0) return; // already rendered from cache
+            try {
+                const sections = JSON.parse(data.value);
+                el.innerHTML = sections.map(s => `${s.heading ? `<h3>${s.heading}</h3>` : ''}<p>${s.body.replace(/\n/g, '<br>')}</p>`).join('');
+            } catch { el.innerHTML = data.value.replace(/\n/g, '<br>'); }
+        });
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+        });
+    </script>
+    <script src="../js/cart.js?v=10"></script>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+            document.getElementById('mobile-menu-overlay').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('open');
+            document.body.style.overflow = document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('mobile-menu-overlay').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    </script>    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script></body>
+</html>

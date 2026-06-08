@@ -1,0 +1,318 @@
+/**
+ * auth.js — Aura Gifts customer authentication utility
+ * Shared across all pages. Handles token storage, user state,
+ * Google Sign-In, header nav updates, and cart sync.
+ *
+ * NOTE: The initial #auth-nav-btn render is handled by an inline <script>
+ * injected directly into each HTML page — that runs synchronously before
+ * first paint. auth.js (deferred) handles updates after that.
+ */
+
+// ─── Constants ───────────────────────────────────────────────────────────────
+const AUTH_TOKEN_KEY = 'aura_user_token';
+const AUTH_USER_KEY  = 'aura_user';
+
+// ─── Token helpers ────────────────────────────────────────────────────────────
+function authGetToken() {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+function authGetUser() {
+    try { return JSON.parse(localStorage.getItem(AUTH_USER_KEY)); } catch { return null; }
+}
+
+function authSetSession(token, user) {
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+}
+
+function authClearSession() {
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(AUTH_USER_KEY);
+}
+
+function authIsLoggedIn() {
+    return !!authGetToken();
+}
+
+// ─── API helper (auth-aware) ──────────────────────────────────────────────────
+async function authFetch(url, method = 'GET', body = null) {
+    const fullUrl = url.startsWith('http') ? url : (typeof API_BASE !== 'undefined' ? API_BASE : '') + url;
+    const opts = {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        credentials: 'include',
+    };
+    const token = authGetToken();
+    if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+    if (body !== null) opts.body = JSON.stringify(body);
+
+    const res = await fetch(fullUrl, opts);
+    const json = await res.json();
+
+    if (res.status === 401) {
+        authClearSession();
+        authUpdateNav();
+    }
+
+    return { ok: res.ok, status: res.status, data: json };
+}
+
+// ─── Logout ───────────────────────────────────────────────────────────────────
+async function authLogout(redirectTo) {
+    try {
+        await authFetch('/api/user/logout', 'POST');
+    } catch (_) {}
+    authClearSession();
+    authUpdateNav();
+
+    // Merge cart back to localStorage on logout (so items aren't lost)
+    if (redirectTo) {
+        window.location.href = redirectTo;
+    } else {
+        window.location.reload();
+    }
+}
+
+// ─── Cart sync ────────────────────────────────────────────────────────────────
+// When a user logs in, merge server-side saved cart with local cart.
+async function authSyncCartOnLogin() {
+    if (!authIsLoggedIn()) return;
+    try {
+        const res = await authFetch('/api/user/cart');
+        if (!res.ok || !res.data.success) return;
+
+        const serverItems = res.data.data.items || [];
+        const localCart   = JSON.parse(localStorage.getItem('aura_cart') || '[]');
+
+        if (serverItems.length > 0 && localCart.length === 0) {
+            // No local cart — restore server cart
+            localStorage.setItem('aura_cart', JSON.stringify(serverItems));
+        } else if (localCart.length > 0) {
+            // Merge: server items + local items, deduplicating by name
+            const merged = [...localCart];
+            serverItems.forEach(serverItem => {
+                const exists = merged.find(i => i.name === serverItem.name);
+                if (!exists) merged.push(serverItem);
+            });
+            localStorage.setItem('aura_cart', JSON.stringify(merged));
+            // Push merged cart back to server
+            await authFetch('/api/user/cart', 'PUT', { items: merged });
+        }
+
+        // Refresh cart count display if cart.js is loaded
+        if (typeof updateCartCount === 'function') updateCartCount();
+    } catch (_) {}
+}
+
+// Push current localStorage cart to server (called on checkout / cart changes)
+async function authSaveCartToServer() {
+    if (!authIsLoggedIn()) return;
+    try {
+        const cart = JSON.parse(localStorage.getItem('aura_cart') || '[]');
+        await authFetch('/api/user/cart', 'PUT', { items: cart });
+    } catch (_) {}
+}
+
+// ─── Navigation update ────────────────────────────────────────────────────────
+// Builds the innerHTML for #auth-nav-btn from the current user state.
+// Called both from the inline boot script (sync, pre-paint) and from
+// DOMContentLoaded (to handle mobile menu). Keep this function pure / side-effect free.
+function _authNavHTML(user, isInPages) {
+    var loginHref   = isInPages ? 'login.html'   : 'pages/login.html';
+    var accountHref = isInPages ? 'account.html' : 'pages/account.html';
+
+    if (user) {
+        var avatar = user.avatar_url
+            ? '<img src="' + _escAttr(user.avatar_url) + '" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border-gray);flex-shrink:0;">'
+            : '<span style="width:26px;height:26px;border-radius:50%;background:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.68rem;color:var(--text-dark);flex-shrink:0;">' + _initials(user.name) + '</span>';
+        return '<a href="' + accountHref + '" class="auth-header-btn" title="My Account">' +
+            avatar +
+            '<span class="auth-btn-label">' + _esc((user.name || '').split(' ')[0]) + '</span>' +
+            '</a>';
+    } else {
+        return '<a href="' + loginHref + '" class="auth-header-btn" title="Sign In">' +
+            '<i class="fas fa-user" style="font-size:0.82rem;"></i>' +
+            '<span class="auth-btn-label">Sign In</span>' +
+            '</a>';
+    }
+}
+
+function authUpdateNav() {
+    var user       = authGetUser();
+    var isInPages  = window.location.pathname.includes('/pages/');
+
+    // ── Desktop / header button ──
+    var btn = document.getElementById('auth-nav-btn');
+    if (btn) {
+        btn.innerHTML = _authNavHTML(user, isInPages);
+    }
+
+    // ── Mobile menu ──
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
+        var mobileAuthEl = document.getElementById('mobile-auth-link');
+        if (mobileAuthEl) mobileAuthEl.remove();
+
+        var a   = document.createElement('a');
+        a.id    = 'mobile-auth-link';
+
+        if (user) {
+            a.href      = isInPages ? 'account.html' : 'pages/account.html';
+            a.innerHTML = '<i class="fas fa-user-circle" style="margin-right:8px;color:var(--gold-dark);"></i> My Account (' + _esc((user.name || '').split(' ')[0]) + ')';
+        } else {
+            a.href      = isInPages ? 'login.html' : 'pages/login.html';
+            a.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right:8px;color:var(--gold-dark);"></i> Sign In / Register';
+        }
+
+        a.onclick = function() {
+            if (typeof closeMobileMenu === 'function') closeMobileMenu();
+        };
+
+        var lastLink = mobileMenu.querySelector('nav a:last-child');
+        if (lastLink) {
+            lastLink.insertAdjacentElement('afterend', a);
+        } else {
+            mobileMenu.appendChild(a);
+        }
+    }
+}
+
+// ─── Path helpers ─────────────────────────────────────────────────────────────
+function _isInPages() {
+    return window.location.pathname.includes('/pages/');
+}
+function _loginPage()   { return _isInPages() ? 'login.html'   : 'pages/login.html'; }
+function _accountPage() { return _isInPages() ? 'account.html' : 'pages/account.html'; }
+
+// ─── Security helpers ─────────────────────────────────────────────────────────
+function _esc(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function _escAttr(str) {
+    return _esc(str).replace(/'/g,'&#039;');
+}
+function _initials(name) {
+    return (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+}
+
+// ─── Require auth guard (for protected pages) ────────────────────────────────
+// Call this at the top of account/profile pages.
+// Returns user if authenticated, otherwise redirects to login.
+function authRequire() {
+    const user = authGetUser();
+    if (!user || !authGetToken()) {
+        const currentPath = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.href = _loginPage() + '?redirect=' + currentPath;
+        return null;
+    }
+    return user;
+}
+
+// ─── Init on DOMContentLoaded ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    authUpdateNav();
+
+    if (authIsLoggedIn()) {
+        authSyncCartOnLogin();
+
+        // Periodically re-validate session in background (every 5 min)
+        // Only updates nav if data actually changed — no unnecessary repaints
+        setInterval(async function () {
+            const res = await authFetch('/api/user/me');
+            if (!res.ok) {
+                authClearSession();
+                authUpdateNav();
+            } else if (res.data && res.data.success) {
+                const current = JSON.stringify(authGetUser());
+                const fresh   = JSON.stringify(res.data.data);
+                if (current !== fresh) {
+                    authSetSession(authGetToken(), res.data.data);
+                    authUpdateNav();
+                }
+            }
+        }, 5 * 60 * 1000);
+    }
+});
+
+// ─── Google One Tap initialiser ───────────────────────────────────────────────
+// Call this on login / register pages after loading the Google GSI script.
+function authInitGoogleOneTap(clientId, onSuccess) {
+    if (!window.google || !google.accounts) return;
+
+    google.accounts.id.initialize({
+        client_id:         clientId,
+        callback:          function(response) { _handleGoogleCredential(response, onSuccess); },
+        auto_select:       false,
+        cancel_on_tap_outside: true,
+        context:           'signin',
+    });
+
+    // Render the standard Google button
+    const container = document.getElementById('google-signin-btn');
+    if (container) {
+        google.accounts.id.renderButton(container, {
+            theme:  'outline',
+            size:   'large',
+            width:  340,
+            text:   'continue_with',
+            shape:  'rectangular',
+            logo_alignment: 'left',
+        });
+    }
+
+    // Show One Tap prompt if not already signed in locally
+    if (!authIsLoggedIn()) {
+        google.accounts.id.prompt();
+    }
+}
+
+async function _handleGoogleCredential(response, onSuccess) {
+    const idToken = response.credential;
+    if (!idToken) return;
+
+    try {
+        const apiBase = (typeof API_BASE !== 'undefined') ? API_BASE : '';
+        const res = await fetch(apiBase + '/api/user/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ id_token: idToken, remember: true }),
+        });
+        const json = await res.json();
+
+        if (res.ok && json.success) {
+            authSetSession(json.data.token, json.data.user);
+            await authSyncCartOnLogin();
+            authUpdateNav();
+            if (typeof onSuccess === 'function') {
+                onSuccess(json.data.user);
+            } else {
+                // Default: go to account page
+                window.location.href = _accountPage();
+            }
+        } else {
+            authShowError(document.getElementById('auth-error'), json.error || 'Google sign-in failed. Please try again.');
+        }
+    } catch (err) {
+        authShowError(document.getElementById('auth-error'), 'Could not connect. Please check your connection.');
+    }
+}
+
+// ─── Shared error display ─────────────────────────────────────────────────────
+function authShowError(container, msg) {
+    if (!container) return;
+    container.textContent = msg;
+    container.style.display = 'block';
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function authClearError(container) {
+    if (!container) return;
+    container.textContent = '';
+    container.style.display = 'none';
+}

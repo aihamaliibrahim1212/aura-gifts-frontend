@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Aura Gifts</title>
+    <link rel="icon" href="img/logos/auragiftslogo.jpeg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="img/logos/auragiftslogo.jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css?v=5">
+    <style>
+        .not-found {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 24px;
+            min-height: 50vh;
+        }
+        .not-found-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            font-weight: 700;
+            color: var(--border-gray);
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        .not-found h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+        .not-found p {
+            color: var(--text-light);
+            font-size: 1rem;
+            max-width: 420px;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+        .not-found-actions {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="top-bar">FOR QUERIES PLEASE CALL 9992070</div>
+        <div class="header-search-bar">
+            <a href="index.html" class="logo">
+                <img src="img/logos/auragiftswidelogo.jpeg" alt="Aura Gifts" class="logo-wide">
+            </a>
+            <div class="header-search-wrap">
+                <i class="fas fa-search header-search-icon"></i>
+                <input type="text" id="hamper-search" placeholder="Search hampers..." autocomplete="off">
+                <div class="search-dropdown" id="search-dropdown"></div>
+            </div>
+            <button class="cart-btn" onclick="toggleCart()">
+                <i class="fas fa-shopping-basket"></i>
+                <span class="cart-count"></span>
+            </button>
+        </div>
+        <div class="container">
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="pages/hampers.html">Instant Hampers</a>
+                    <a href="pages/personalised-hampers.html">Personalised Hampers</a>
+                    <a href="pages/create-your-own.html">Create Your Own</a>
+                    <a href="pages/corporate-orders.html">Corporate Orders</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 404 Content -->
+    <div class="not-found">
+        <div class="not-found-number">404</div>
+        <h2>Page Not Found</h2>
+        <p>The page you're looking for doesn't exist or may have been moved. Let's get you back on track.</p>
+        <div class="not-found-actions">
+            <a href="index.html" class="btn btn-gold btn-lg">
+                <i class="fas fa-home"></i> Go Home
+            </a>
+            <a href="index.html#products" class="btn btn-outline btn-lg">
+                Browse Hampers
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <span style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;">
+                            <span style="font-weight:800;color:white;">aura</span><span style="font-weight:400;color:rgba(255,255,255,0.75);">gifts</span>
+                        </span>
+                    </a>
+                    <p style="margin-top:14px;">Art of refined gifting. Luxury, thoughtful, and deeply personal gifts for every occasion. Corporate orders welcome.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/auragifts.mv/" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html#products">All Hampers</a></li>
+                        <li><a href="pages/corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="index.html#testimonials">Reviews</a></li>
+                        <li><a href="pages/faq.html">FAQ</a></li>
+                        <li><a href="https://www.instagram.com/auragifts.mv/" target="_blank">Instagram</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/about.html">About Us</a></li>
+                        <li><a href="pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="pages/terms.html">Terms of Service</a></li>
+                        <li><a href="pages/corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="mailto:aura.gifts.mv@gmail.com">aura.gifts.mv@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="justify-content:center;">
+                <p>&copy; 2025 Aura Gifts. Art of refined gifting.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function goSearch(q) { window.location.href = 'search.html?q=' + q; }
+
+        const input = document.getElementById('hamper-search');
+        const dropdown = document.getElementById('search-dropdown');
+
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                const q = input.value.trim();
+                if (q) goSearch(encodeURIComponent(q));
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+        });
+    </script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

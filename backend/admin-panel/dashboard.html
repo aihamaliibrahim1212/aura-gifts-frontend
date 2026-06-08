@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Admin</title>
+  <style>html,body{background:#f8f8f6;}</style><link rel="stylesheet" href="/admin/static/admin.css?v=3" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <a href="http://127.0.0.1:8000" target="_blank" style="text-decoration:none;font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;font-size:1.9rem;display:block;text-align:center;width:100%;"><span style="font-weight:800;color:#9a9a9a;">aura</span><span style="font-weight:400;color:#9a9a9a;">gifts</span></a>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html" class="nav-item active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Dashboard
+        </a>
+        <a href="/admin/products.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          Products
+        </a>
+        <a href="/admin/orders.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Orders
+        </a>
+        <a href="/admin/reviews.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+          Reviews
+        </a>
+        <a href="/admin/faq.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          FAQ
+        </a>
+        <a href="/admin/content.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          Content
+        </a>
+        <a href="/admin/about.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          About Us
+        </a>
+        <a href="/admin/personalised-hampers.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>Personalised Hampers</a>
+        <a href="/admin/create-your-own.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>Create Your Own</a>
+        <a href="/admin/corporate-orders.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>Corporate Orders</a>
+        <a href="/admin/terms.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Terms of Service
+        </a>
+        <a href="/admin/privacy.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Privacy Policy
+        </a>
+        <a href="/admin/users.html" class="nav-item">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          Users
+        </a>
+      </nav>
+    </aside>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+        <h2 class="page-title">Dashboard</h2>
+        <div class="topbar-right">
+          <span class="admin-name" id="adminName">......</span>
+          <button class="btn btn-outline btn-sm" onclick="logout()">Logout</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-box-open"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="statProducts">...</span>
+              <span class="stat-label">Total Products</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-shopping-basket"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="statOrders">...</span>
+              <span class="stat-label">Total Orders</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="statPending">...</span>
+              <span class="stat-label">Pending Orders</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-coins"></i></div>
+            <div class="stat-info">
+              <span class="stat-value" id="statRevenue">...</span>
+              <span class="stat-label">Total Revenue (MVR)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div class="card" id="lowStockCard" style="display:none;">
+          <div class="card-header">
+            <h3><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-right:6px;"></i> Low Stock Alert</h3>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Stock</th>
+              </tr>
+            </thead>
+            <tbody id="lowStockBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Orders</h3>
+            <a href="/admin/orders.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recentOrdersBody">
+              <tr><td colspan="5" class="text-center text-muted">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Reviews -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Reviews</h3>
+            <a href="/admin/reviews.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div id="recentReviewsList">
+            <div class="empty-state"><p>Loading…</p></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="/admin/static/admin.js"></script>
+  <script>
+    requireAuth();
+    loadDashboard();
+
+    async function loadDashboard() {
+      try {
+        const data = await api('/api/admin/dashboard');
+
+        document.getElementById('statProducts').textContent = data.total_products ?? '0';
+        document.getElementById('statOrders').textContent = data.total_orders ?? '0';
+        document.getElementById('statPending').textContent = data.pending_orders ?? '0';
+        document.getElementById('statRevenue').textContent =
+          (data.total_revenue || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // Low stock
+        if (data.low_stock_products && data.low_stock_products.length > 0) {
+          document.getElementById('lowStockCard').style.display = '';
+          document.getElementById('lowStockBody').innerHTML = data.low_stock_products.map(p => `
+            <tr>
+              <td><strong>${escHtml(p.name)}</strong></td>
+              <td><span class="badge badge-gray">${escHtml(p.category || '...')}</span></td>
+              <td><span class="stock-badge ${p.stock <= 0 ? 'stock-out' : 'stock-low'}">${p.stock}</span></td>
+            </tr>
+          `).join('');
+        }
+
+        // Recent orders
+        const recentOrders = data.recent_orders || [];
+        document.getElementById('recentOrdersBody').innerHTML = recentOrders.length
+          ? recentOrders.map(o => `
+            <tr>
+              <td>#${o.id}</td>
+              <td>${escHtml(o.customer_name)}</td>
+              <td>MVR ${(o.total_mvr || 0).toFixed(2)}</td>
+              <td><span class="badge badge-${statusColor(o.status)}">${escHtml(o.status)}</span></td>
+              <td>${formatDate(o.created_at)}</td>
+            </tr>
+          `).join('')
+          : '<tr><td colspan="5" class="text-center text-muted">No orders yet</td></tr>';
+
+        // Recent reviews
+        const recentReviews = data.recent_reviews || [];
+        document.getElementById('recentReviewsList').innerHTML = recentReviews.length
+          ? recentReviews.map(r => `
+            <div class="review-item">
+              <div class="review-meta">
+                <strong>${escHtml(r.reviewer_name)}</strong>
+                <span class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                <span class="badge ${r.is_approved ? 'badge-green' : 'badge-orange'}">${r.is_approved ? 'Approved' : 'Pending'}</span>
+              </div>
+              <p>${escHtml(r.text)}</p>
+            </div>
+          `).join('')
+          : '<div class="empty-state"><p>No reviews yet</p></div>';
+
+      } catch (e) {
+        showToast('Failed to load dashboard', 'error');
+      }
+    }
+  </script>
+</body>
+</html>
