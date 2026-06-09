@@ -192,17 +192,5 @@
             document.body.style.overflow = '';
         }
     </script>    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
-    <script>
-        document.querySelectorAll('a').forEach(function(a){
-            if(a.href&&a.href.startsWith(location.origin)&&!a.target&&!a.href.includes('#')){
-                a.addEventListener('click',function(e){
-                    var href=a.href;
-                    if(e.ctrlKey||e.metaKey||e.shiftKey) return;
-                    e.preventDefault();
-                    document.documentElement.classList.add('page-out');
-                    setTimeout(function(){location.href=href;},150);
-                });
-            }
-        });
-    </script></body>
+    </body>
 </html>

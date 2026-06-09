@@ -30,7 +30,6 @@
     </script>
     <!-- Hide until the inline script above confirms auth -->
     <style>html { visibility: hidden; }</style>
-    <script src="../js/auth.js?v=1" defer></script>
 </head>
 <body>
 
@@ -78,16 +77,14 @@
                 <div class="account-avatar" id="account-avatar">?</div>
                 <div class="account-info">
                     <h1 id="account-name">Loading…</h1>
-                    <p id="account-email" style="color:var(--text-light);font-size:0.9rem;margin:2px 0 6px;"></p>
+                    <p id="account-email" style="color:var(--text-light);font-size:clamp(0.72rem,2.5vw,0.9rem);margin:2px 0 6px;"></p>
                     <div id="account-badges" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
                 </div>
-                <div style="margin-left:auto;display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0;">
-                    <div id="admin-panel-btn" style="display:none;">
-                        <a href="/admin/dashboard.html" class="btn btn-outline" style="gap:6px;">
-                            <i class="fas fa-shield-alt" style="font-size:0.85rem;"></i> Admin Panel
-                        </a>
-                    </div>
-                    <button class="btn btn-outline" onclick="authLogout('login.html')">
+                <div style="margin-left:auto;display:flex;flex-direction:row;gap:10px;align-items:center;flex-shrink:0;" class="acct-btns">
+                    <a id="admin-panel-btn" href="/admin/dashboard.html" class="btn btn-outline acct-action-btn" style="display:none;">
+                        <i class="fas fa-shield-alt"></i> Admin Panel
+                    </a>
+                    <button class="btn btn-outline acct-action-btn" onclick="authLogout('login.html')">
                         <i class="fas fa-sign-out-alt"></i> Sign Out
                     </button>
                 </div>
@@ -122,58 +119,109 @@
             <div class="tab-panel" id="panel-profile" style="display:none;">
                 <div class="profile-grid">
 
-                    <!-- Personal Info -->
-                    <div class="profile-section">
-                        <h3 class="section-heading"><i class="fas fa-user-circle"></i> Personal Information</h3>
+                    <!-- Personal Info + Delivery in one card -->
+                    <div class="profile-section" style="grid-column:1/-1;">
+                        <h3 class="section-heading"><i class="fas fa-user-circle"></i> Profile Settings</h3>
 
                         <div class="auth-error" id="profile-error" role="alert" style="display:none;"></div>
                         <div class="auth-success" id="profile-success" role="status" style="display:none;"></div>
 
                         <form id="profile-form" novalidate>
-                            <div class="form-group">
-                                <label for="profile-name">Full name</label>
-                                <div class="input-wrap">
-                                    <i class="fas fa-user input-icon"></i>
-                                    <input type="text" id="profile-name" placeholder="Your full name" maxlength="200">
+
+                            <!-- Personal -->
+                            <p style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:14px;">Personal</p>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-name">Full name</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="profile-name" placeholder="Your full name" maxlength="200">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>Email address</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-envelope input-icon"></i>
+                                        <input type="email" id="profile-email" disabled style="background:var(--off-white);cursor:not-allowed;">
+                                    </div>
+                                    <div id="email-verify-notice" style="display:none;margin-top:5px;font-size:0.78rem;color:#e65100;">
+                                        <i class="fas fa-exclamation-circle"></i> Email not verified.
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Email address</label>
-                                <div class="input-wrap">
-                                    <i class="fas fa-envelope input-icon"></i>
-                                    <input type="email" id="profile-email" disabled style="background:var(--off-white);cursor:not-allowed;">
-                                </div>
-                                <div id="email-verify-notice" style="display:none;margin-top:6px;font-size:0.82rem;color:#e65100;">
-                                    <i class="fas fa-exclamation-circle"></i> Your email address is not verified.
-                                </div>
-                            </div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-top:14px;">
                                 <label>Sign-in method</label>
                                 <div id="provider-display" style="padding:10px 14px;background:var(--off-white);border:1.5px solid var(--border-gray);border-radius:8px;font-size:0.88rem;color:var(--text-mid);display:flex;align-items:center;gap:8px;"></div>
                             </div>
-                            <button type="submit" class="btn btn-gold" id="profile-save-btn">
-                                <span class="btn-text"><i class="fas fa-save"></i> Save Changes</span>
-                                <span class="btn-spinner" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
-                            </button>
+
+                            <!-- Delivery -->
+                            <div style="border-top:1.5px solid var(--border-gray);margin:24px 0 18px;padding-top:20px;">
+                                <p style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:14px;"><i class="fas fa-map-marker-alt" style="margin-right:5px;"></i>Delivery Details</p>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-phone">Phone number</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-phone input-icon"></i>
+                                        <input type="tel" id="profile-phone" placeholder="e.g. 9991234" maxlength="30">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-island">Island</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-map-pin input-icon"></i>
+                                        <input type="text" id="profile-island" placeholder="e.g. Maafushi" maxlength="100">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-address">Address</label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-home input-icon"></i>
+                                    <input type="text" id="profile-address" placeholder="House / flat number, street" maxlength="300">
+                                </div>
+                            </div>
+
+                            <!-- Boat -->
+                            <div style="border-top:1.5px solid var(--border-gray);margin:8px 0 18px;padding-top:20px;">
+                                <p style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:4px;"><i class="fas fa-ship" style="margin-right:5px;"></i>Boat Details</p>
+                                <p style="font-size:0.78rem;color:var(--text-light);margin-bottom:14px;">Leave empty if not ordering via boat.</p>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-boat-name">Boat name</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-anchor input-icon"></i>
+                                        <input type="text" id="profile-boat-name" placeholder="Boat name" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-boat-number">Boat number</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-hashtag input-icon"></i>
+                                        <input type="text" id="profile-boat-number" placeholder="Reg. number" maxlength="50">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:24px;">
+                                <span id="profile-autosave-status" style="font-size:0.78rem;color:var(--text-light);"></span>
+                            </div>
                         </form>
                     </div>
 
-                    <!-- Change Password -->
-                    <div class="profile-section" id="change-pw-section">
+                    <!-- Hidden sections (kept for future use) -->
+                    <div class="profile-section" id="change-pw-section" style="display:none;">
                         <h3 class="section-heading"><i class="fas fa-lock"></i> Change Password</h3>
-
                         <div class="auth-error" id="pw-error" role="alert" style="display:none;"></div>
                         <div class="auth-success" id="pw-success" role="status" style="display:none;"></div>
-
                         <form id="pw-form" novalidate>
                             <div class="form-group" id="current-pw-group">
                                 <label for="current-pw">Current password</label>
                                 <div class="input-wrap">
                                     <i class="fas fa-lock input-icon"></i>
                                     <input type="password" id="current-pw" placeholder="Your current password" maxlength="255">
-                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('current-pw', this)" aria-label="Show password">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('current-pw', this)" aria-label="Show password"><i class="fas fa-eye"></i></button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -181,9 +229,7 @@
                                 <div class="input-wrap">
                                     <i class="fas fa-lock input-icon"></i>
                                     <input type="password" id="new-pw" placeholder="At least 8 characters" maxlength="255">
-                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('new-pw', this)" aria-label="Show password">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('new-pw', this)" aria-label="Show password"><i class="fas fa-eye"></i></button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -191,9 +237,7 @@
                                 <div class="input-wrap">
                                     <i class="fas fa-lock input-icon"></i>
                                     <input type="password" id="confirm-pw" placeholder="Repeat new password" maxlength="255">
-                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('confirm-pw', this)" aria-label="Show password">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('confirm-pw', this)" aria-label="Show password"><i class="fas fa-eye"></i></button>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-gold" id="pw-save-btn">
@@ -203,8 +247,7 @@
                         </form>
                     </div>
 
-                    <!-- Danger zone -->
-                    <div class="profile-section danger-zone">
+                    <div class="profile-section danger-zone" id="danger-zone-section" style="display:none;">
                         <h3 class="section-heading" style="color:#c62828;"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
                         <p style="font-size:0.875rem;color:var(--text-mid);margin-bottom:16px;">Deleting your account is permanent and cannot be undone. Your order history will be anonymised.</p>
                         <button class="btn" style="background:#fce4e4;color:#c62828;border:1.5px solid #f5c6c6;" onclick="showDeleteAccountDialog()">
@@ -221,6 +264,39 @@
     <!-- Footer -->
     <footer id="contact">
         <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">
+                        <span style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;">
+                            <span style="font-weight:800;color:white;">aura</span><span style="font-weight:400;color:rgba(255,255,255,0.7);">gifts</span>
+                        </span>
+                    </a>
+                    <p style="margin-top:14px;">Art of refined gifting. Luxury, thoughtful, and deeply personal gifts for every occasion. Corporate orders welcome.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/auragifts.mv/" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="hampers.html">All Hampers</a></li>
+                        <li><a href="hampers.html">Instant Hampers</a></li>
+                        <li><a href="personalised-hampers.html">Personalised Hampers</a></li>
+                        <li><a href="create-your-own.html">Create Your Own</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="mailto:aura.gifts.mv@gmail.com">aura.gifts.mv@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="footer-bottom" style="justify-content:center;">
                 <p>&copy; 2025 Aura Gifts. Art of refined gifting.</p>
             </div>
@@ -228,12 +304,27 @@
     </footer>
 
     <script src="../js/api-cache.js?v=11"></script>
+    <script src="../js/auth.js?v=1"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // ── Auth guard ─────────────────────────────────────────────────────
         const currentUser = authGetUser();
         if (currentUser) {
+            // Always hide admin button until server confirms superadmin
+            document.getElementById('admin-panel-btn').style.display = 'none';
             initAccountPage(currentUser);
+            authFetch('/api/user/me').then(function(res) {
+                if (res.ok && res.data && res.data.success) {
+                    const fresh = res.data.data;
+                    authSetSession(authGetToken(), fresh);
+                    document.getElementById('admin-panel-btn').style.display =
+                        fresh.role === 'superadmin' ? 'inline-flex' : 'none';
+                } else {
+                    document.getElementById('admin-panel-btn').style.display = 'none';
+                }
+            }).catch(function() {
+                document.getElementById('admin-panel-btn').style.display = 'none';
+            });
         }
 
         function initAccountPage(user) {
@@ -253,10 +344,11 @@
 
             // Badges
             const badgesEl = document.getElementById('account-badges');
-            if (user.role === 'admin' || user.role === 'superadmin') {
+            if (user.role === 'superadmin') {
                 badgesEl.innerHTML += `<span class="account-badge admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>`;
-                // Show Admin Panel button
-                document.getElementById('admin-panel-btn').style.display = 'block';
+                document.getElementById('admin-panel-btn').style.display = 'inline-flex';
+            } else {
+                document.getElementById('admin-panel-btn').style.display = 'none';
             }
             if (!user.email_verified) {
                 badgesEl.innerHTML += `<span class="account-badge warn-badge"><i class="fas fa-exclamation-circle"></i> Email not verified</span>`;
@@ -266,8 +358,14 @@
             }
 
             // Profile form
-            document.getElementById('profile-name').value  = user.name || '';
+            document.getElementById('profile-name').value  = user.name  || '';
             document.getElementById('profile-email').value = user.email || '';
+            document.getElementById('profile-phone').value       = user.phone       || '';
+            document.getElementById('profile-atoll').value       = user.atoll       || '';
+            document.getElementById('profile-island').value      = user.island      || '';
+            document.getElementById('profile-address').value     = user.address     || '';
+            document.getElementById('profile-boat-name').value   = user.boat_name   || '';
+            document.getElementById('profile-boat-number').value = user.boat_number || '';
 
             // Email verify notice
             if (!user.email_verified) {
@@ -286,6 +384,10 @@
             if (user.provider === 'google') {
                 document.getElementById('current-pw-group').style.display = 'none';
             }
+
+            // Hide change-password and delete account for all users
+            document.getElementById('change-pw-section').style.display = 'none';
+            document.getElementById('danger-zone-section').style.display = 'none';
 
             // Load orders
             loadOrders();
@@ -353,40 +455,56 @@
             }
         }
 
-        // ── Profile form ────────────────────────────────────────────────────
-        document.getElementById('profile-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name    = document.getElementById('profile-name').value.trim();
-            const errEl   = document.getElementById('profile-error');
-            const succEl  = document.getElementById('profile-success');
+        // ── Profile auto-save on blur ───────────────────────────────────────
+        let _profileSaveTimer = null;
+        function scheduleProfileSave() {
+            clearTimeout(_profileSaveTimer);
+            _profileSaveTimer = setTimeout(saveProfile, 800);
+        }
 
-            authClearError(errEl);
-            document.getElementById('profile-success').style.display = 'none';
+        async function saveProfile() {
+            const name = document.getElementById('profile-name').value.trim();
+            if (!name || name.length < 2) return;
 
-            if (!name || name.length < 2) {
-                authShowError(errEl, 'Please enter your full name (at least 2 characters).');
-                return;
-            }
+            const payload = {
+                name,
+                phone:       document.getElementById('profile-phone').value.trim(),
+                atoll:       document.getElementById('profile-atoll').value.trim(),
+                island:      document.getElementById('profile-island').value.trim(),
+                address:     document.getElementById('profile-address').value.trim(),
+                boat_name:   document.getElementById('profile-boat-name').value.trim(),
+                boat_number: document.getElementById('profile-boat-number').value.trim(),
+            };
 
-            setFormLoading('profile-save-btn', true);
+            const statusEl = document.getElementById('profile-autosave-status');
+            if (statusEl) statusEl.textContent = 'Saving…';
+
             try {
-                const res = await authFetch('/api/user/profile', 'PUT', { name });
+                const res = await authFetch('/api/user/profile', 'PUT', payload);
                 if (res.ok && res.data.success) {
-                    // Update stored user
                     const updatedUser = res.data.data;
                     authSetSession(authGetToken(), updatedUser);
                     authUpdateNav();
                     document.getElementById('account-name').textContent = updatedUser.name;
-                    succEl.textContent = 'Profile updated successfully.';
-                    succEl.style.display = 'block';
-                    setTimeout(() => succEl.style.display = 'none', 3500);
-                } else {
-                    authShowError(errEl, res.data.error || 'Update failed. Please try again.');
+                    if (statusEl) {
+                        statusEl.textContent = 'Saved';
+                        setTimeout(() => { statusEl.textContent = ''; }, 2000);
+                    }
                 }
-            } catch (err) {
-                authShowError(errEl, 'Could not connect. Please try again.');
-            }
-            setFormLoading('profile-save-btn', false);
+            } catch (_) {}
+        }
+
+        // Attach blur listeners to all profile fields
+        ['profile-name','profile-phone','profile-atoll','profile-island',
+         'profile-address','profile-boat-name','profile-boat-number'].forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('blur', scheduleProfileSave);
+        });
+
+        // Keep form submit as fallback (Enter key etc)
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveProfile();
         });
 
         // ── Password form ───────────────────────────────────────────────────
@@ -433,7 +551,7 @@
         });
 
         // ── Delete account dialog ───────────────────────────────────────────
-        function showDeleteAccountDialog() {
+        window.showDeleteAccountDialog = function() {
             const user = authGetUser();
             const needsPw = user && user.provider !== 'google' && user.provider !== 'email_google';
 
@@ -466,7 +584,7 @@
             document.body.appendChild(overlay);
         }
 
-        async function confirmDeleteAccount(needsPw) {
+        window.confirmDeleteAccount = async function(needsPw) {
             const errEl = document.getElementById('delete-error');
             const payload = {};
 
@@ -497,12 +615,12 @@
         }
 
         // ── Tab switching ───────────────────────────────────────────────────
-        function showTab(tab) {
+        window.showTab = function(tab) {
             document.getElementById('panel-orders').style.display  = tab === 'orders'  ? 'block' : 'none';
             document.getElementById('panel-profile').style.display = tab === 'profile' ? 'block' : 'none';
             document.getElementById('tab-orders').classList.toggle('active', tab === 'orders');
             document.getElementById('tab-profile').classList.toggle('active', tab === 'profile');
-        }
+        };
 
     }); // end DOMContentLoaded
 
@@ -543,6 +661,11 @@
             document.getElementById('hamburger').classList.remove('open');
             document.body.style.overflow = '';
         }
+
+        // Header scroll shadow — matches main site behaviour
+        window.addEventListener('scroll', function() {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+        }, { passive: true });
     </script>
 </body>
 </html>

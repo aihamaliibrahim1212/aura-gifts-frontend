@@ -5,7 +5,7 @@
  * Assets: cache-first (CSS/JS/fonts never change without version bump)
  */
 
-const CACHE_NAME = 'aura-v5';
+const CACHE_NAME = 'aura-v7';
 
 self.addEventListener('install', function(event) {
     self.skipWaiting();
@@ -42,26 +42,22 @@ self.addEventListener('fetch', function(event) {
     var isImg  = false;
 
     if (isHtml) {
-        // Cache-first for HTML: serve from cache instantly, only fetch if not cached
+        // Network-first for HTML: always fetch fresh, fall back to cache if offline
         event.respondWith(
-            caches.open(CACHE_NAME).then(function(cache) {
-                return cache.match(req).then(function(cached) {
-                    if (cached) {
-                        // Serve from cache, update in background silently
-                        fetch(req).then(function(response) {
-                            if (response && response.status === 200) {
-                                cache.put(req, response.clone());
-                            }
-                        }).catch(function() {});
-                        return cached;
-                    }
-                    // Not cached — fetch and cache
-                    return fetch(req).then(function(response) {
-                        if (response && response.status === 200) {
-                            cache.put(req, response.clone());
-                        }
-                        return response;
-                    }).catch(function() { return new Response('', {status: 503}); });
+            fetch(req).then(function(response) {
+                if (response && response.status === 200) {
+                    var responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(function(cache) {
+                        cache.put(req, responseToCache);
+                    });
+                }
+                return response;
+            }).catch(function() {
+                // Offline fallback — serve cached version if available
+                return caches.open(CACHE_NAME).then(function(cache) {
+                    return cache.match(req).then(function(cached) {
+                        return cached || new Response('', {status: 503});
+                    });
                 });
             })
         );

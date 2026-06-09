@@ -284,16 +284,35 @@
 .account-header {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: clamp(8px, 2vw, 20px);
     padding: 36px 0 28px;
     border-bottom: 1.5px solid var(--border-gray);
     margin-bottom: 24px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+.acct-action-btn {
+    padding: clamp(6px, 1vw, 9px) clamp(10px, 1.5vw, 20px) !important;
+    font-size: clamp(0.65rem, 1.8vw, 0.85rem) !important;
+    min-width: 0 !important;
+    width: auto !important;
+    height: clamp(32px, 4vw, 40px) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    gap: clamp(4px, 0.8vw, 8px) !important;
+}
+
+.acct-btns {
+    flex-shrink: 0;
+    gap: clamp(6px, 1.2vw, 10px) !important;
 }
 
 .account-avatar {
-    width: 72px;
-    height: 72px;
+    width: clamp(40px, 5.5vw, 72px);
+    height: clamp(40px, 5.5vw, 72px);
     border-radius: 50%;
     background: var(--gold);
     color: var(--text-dark);
@@ -301,15 +320,15 @@
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 1.4rem;
+    font-size: clamp(0.85rem, 2vw, 1.4rem);
     flex-shrink: 0;
     overflow: hidden;
-    border: 2.5px solid var(--border-gray);
+    border: none;
 }
 
 .account-info h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
+    font-size: clamp(1.05rem, 3vw, 1.6rem);
     margin-bottom: 0;
 }
 
@@ -317,9 +336,9 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 3px 10px;
+    padding: clamp(2px, 0.5vw, 3px) clamp(7px, 1.5vw, 10px);
     border-radius: 12px;
-    font-size: 0.72rem;
+    font-size: clamp(0.58rem, 1.8vw, 0.72rem);
     font-weight: 600;
     letter-spacing: 0.3px;
 }

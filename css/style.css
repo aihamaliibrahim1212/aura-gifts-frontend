@@ -144,6 +144,7 @@ header.scrolled {
     transform: translateY(-2px);
 }
 .btn-lg { padding: 14px 32px; font-size: 1rem; border-radius: 8px; }
+.btn-sm { padding: 7px 14px; font-size: 0.82rem; }
 
 /* Hero Section */
 .hero {

@@ -81,6 +81,20 @@
     </div>
   </div>
 
+  <!-- User detail modal -->
+  <div id="userDetailModal" class="modal-overlay">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h3>User Details</h3>
+        <button class="modal-close" onclick="closeUserDetail()">✕</button>
+      </div>
+      <div class="modal-body" id="userDetailBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeUserDetail()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Role modal -->
   <div id="roleModal" class="modal-overlay">
     <div class="modal">
@@ -95,8 +109,7 @@
           <label>Role</label>
           <select id="roleSelect" class="form-control">
             <option value="customer">Customer (no admin access)</option>
-            <option value="admin">Admin (full admin panel access)</option>
-            <option value="superadmin">Superadmin (admin + user management)</option>
+            <option value="superadmin">Superadmin (full access + user management)</option>
           </select>
         </div>
       </div>
@@ -121,16 +134,68 @@
       loadUsers();
     }
 
+    let allUsers = [];
+
     async function loadUsers() {
       try {
-        const users = await api('/api/admin/users');
-        renderUsers(users);
+        allUsers = await api('/api/admin/users');
+        renderUsers(allUsers);
       } catch(e) {
         showToast('Failed to load users', 'error');
       }
     }
 
+    function openUserDetail(id) {
+      const u = allUsers.find(x => x.id === id);
+      if (!u) return;
+
+      function row(label, value) {
+        if (!value) return '';
+        return `<div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f0efec;">
+          <span style="font-size:0.78rem;font-weight:600;color:#7a7a7a;min-width:110px;">${label}</span>
+          <span style="font-size:0.88rem;color:#1a1a1a;">${escHtml(value)}</span>
+        </div>`;
+      }
+
+      document.getElementById('userDetailBody').innerHTML = `
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+          ${u.avatar_url
+            ? `<img src="${escHtml(u.avatar_url)}" style="width:52px;height:52px;border-radius:50%;object-fit:cover;">`
+            : `<div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;">${escHtml((u.name||'?')[0].toUpperCase())}</div>`
+          }
+          <div>
+            <div style="font-weight:700;font-size:1rem;">${escHtml(u.name || '—')}</div>
+            <div style="font-size:0.82rem;color:#7a7a7a;">${escHtml(u.email)}</div>
+          </div>
+        </div>
+        <div>
+          ${row('Phone', u.phone)}
+          ${row('Atoll', u.atoll)}
+          ${row('Island', u.island)}
+          ${row('Address', u.address)}
+          ${row('Boat Name', u.boat_name)}
+          ${row('Boat Number', u.boat_number)}
+          ${row('Provider', u.provider)}
+          ${row('Role', u.role)}
+          ${row('Joined', formatDate(u.created_at))}
+        </div>
+        ${!u.phone && !u.island ? '<p style="margin-top:16px;font-size:0.82rem;color:#b0b0b0;text-align:center;">No delivery details saved yet.</p>' : ''}
+      `;
+      document.getElementById('userDetailModal').classList.add('open');
+    }
+
+    function closeUserDetail() {
+      document.getElementById('userDetailModal').classList.remove('open');
+    }
+
     function renderUsers(users) {
+      // Superadmins first, then admins, then customers — all alphabetical within each group
+      const roleOrder = { superadmin: 0, admin: 1, customer: 2 };
+      users = [...users].sort((a, b) => {
+        const ro = (roleOrder[a.role] ?? 9) - (roleOrder[b.role] ?? 9);
+        if (ro !== 0) return ro;
+        return (a.name || '').localeCompare(b.name || '');
+      });
       const tbody = document.getElementById('usersBody');
       if (!users.length) {
         tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><p>No users yet.</p></div></td></tr>';
@@ -147,7 +212,7 @@
         const isMe = me && u.id === me.id;
         const roleClass = u.role === 'superadmin' ? 'role-superadmin' : u.role === 'admin' ? 'role-admin' : 'role-editor';
         return `
-          <tr>
+          <tr style="cursor:pointer;" onclick="openUserDetail(${u.id})">
             <td>
               <div style="display:flex;align-items:center;gap:10px;">
                 ${u.avatar_url
@@ -162,7 +227,7 @@
             <td><span class="badge ${roleClass}">${escHtml(u.role)}</span></td>
             <td><span class="badge ${u.is_active ? 'badge-green' : 'badge-gray'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
             <td class="col-created">${formatDate(u.created_at)}</td>
-            <td>
+            <td onclick="event.stopPropagation()">
               ${isMe
                 ? `<span class="badge badge-gold">You</span>`
                 : `<button class="btn btn-outline btn-sm" onclick="openRoleModal(${u.id}, '${escHtml(u.name)}', '${escHtml(u.role)}')">Change Role</button>`

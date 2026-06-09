@@ -91,17 +91,19 @@
         }
         .login-terms a:hover { color: #1a1a1a; border-color: #1a1a1a; }
         .login-back {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 24px;
+            display: inline-block;
+            margin-top: 28px;
             font-size: 0.82rem;
-            color: #9a9a9a;
+            color: #b8a898;
             text-decoration: none;
+            letter-spacing: 0.3px;
             transition: color 0.2s;
+            border-bottom: 1px solid transparent;
         }
-        .login-back:hover { color: #1a1a1a; }
+        .login-back:hover {
+            color: #1a1a1a;
+            border-bottom-color: #1a1a1a;
+        }
         @media (max-width: 480px) {
             .login-card { padding: 36px 24px 32px; }
         }
@@ -119,7 +121,7 @@
 
         <div class="login-divider"></div>
 
-        <h1 class="login-title">Welcome back</h1>
+        <h1 class="login-title" id="login-title">Sign in</h1>
         <p class="login-subtitle">Aura Gifts</p>
 
         <div class="login-error" id="auth-error" role="alert"></div>
@@ -132,10 +134,7 @@
             <a href="privacy.html">Privacy Policy</a>.
         </p>
 
-        <a href="../index.html" class="login-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            Back to store
-        </a>
+        <a href="../index.html" class="login-back">← &nbsp;Back to store</a>
 
     </div>
 
@@ -166,10 +165,21 @@
                         .then(function(r) { return r.json(); })
                         .then(function(json) {
                             if (json.success) {
-                                localStorage.setItem('aura_user_token', json.data.token);
+                                var token = json.data.token;
+                                localStorage.setItem('aura_user_token', token);
                                 localStorage.setItem('aura_user', JSON.stringify(json.data.user));
-                                var params = new URLSearchParams(window.location.search);
-                                window.location.href = params.get('redirect') || 'account.html';
+                                // Fetch fresh user data so avatar_url is up-to-date after background Cloudinary upload
+                                var apiBase = (typeof API_BASE !== 'undefined') ? API_BASE : '';
+                                fetch(apiBase + '/api/user/me', {
+                                    headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }
+                                }).then(function(r) { return r.json(); }).then(function(me) {
+                                    if (me.success && me.data) {
+                                        localStorage.setItem('aura_user', JSON.stringify(me.data));
+                                    }
+                                }).catch(function() {}).finally(function() {
+                                    var params = new URLSearchParams(window.location.search);
+                                    window.location.href = params.get('redirect') || 'account.html';
+                                });
                             } else {
                                 errEl.textContent = json.error || 'Sign-in failed. Please try again.';
                                 errEl.style.display = 'block';
@@ -205,8 +215,8 @@
         window.googleOnLoad = googleOnLoad;
 
         document.addEventListener('DOMContentLoaded', function() {
+            var params = new URLSearchParams(window.location.search);
             if (localStorage.getItem('aura_user_token')) {
-                var params = new URLSearchParams(window.location.search);
                 window.location.href = params.get('redirect') || 'account.html';
             }
         });

@@ -242,23 +242,40 @@ class UserAuthController extends Controller
 
         // 3. Auto-create a new account for first-time Google users
         if (!$user) {
-            // Download and store the Google avatar in Cloudinary so it's cacheable
-            $storedAvatar = $avatar ? $this->storeGoogleAvatar($avatar) : null;
-
+            // Create the user immediately using the Google URL directly.
+            // Avatar migration to Cloudinary happens in the background after we
+            // respond, so the first sign-up is never slow or error-prone.
             $user = User::create([
                 'name'           => $name ?: explode('@', $email)[0],
                 'email'          => $email,
                 'password_hash'  => null,
-                'avatar_url'     => $storedAvatar ?: $avatar ?: null,
+                'avatar_url'     => $avatar ?: null,
                 'provider'       => 'google',
                 'google_id'      => $googleId,
                 'role'           => 'customer',
                 'email_verified' => true,
             ]);
+
+            // Migrate avatar to Cloudinary asynchronously (best-effort, won't block login)
+            if ($avatar) {
+                $userId = $user->id;
+                register_shutdown_function(function() use ($userId, $avatar) {
+                    try {
+                        $stored = $this->storeGoogleAvatar($avatar);
+                        if ($stored) {
+                            User::where('id', $userId)->update(['avatar_url' => $stored]);
+                        }
+                    } catch (\Throwable $e) {
+                        Log::warning('Background avatar migration failed: ' . $e->getMessage());
+                    }
+                });
+            }
         }
 
         if (!$user->is_active) {
-            return $this->err('This account has been disabled. Please contact support.', 403);
+            // Re-enable — Google sign-in proves account ownership
+            $user->is_active = true;
+            $user->save();
         }
 
         $token = $this->issueToken($user, $remember);
@@ -386,6 +403,20 @@ class UserAuthController extends Controller
                 return $this->err('Invalid avatar URL');
             }
             $user->avatar_url = $url ?: null;
+        }
+
+        // Delivery fields
+        $deliveryFields = ['phone', 'atoll', 'island', 'address', 'boat_name', 'boat_number'];
+        $deliveryLimits = ['phone' => 30, 'atoll' => 100, 'island' => 100, 'address' => 300, 'boat_name' => 100, 'boat_number' => 50];
+        foreach ($deliveryFields as $field) {
+            if (array_key_exists($field, $data)) {
+                $val = trim((string) ($data[$field] ?? ''));
+                $max = $deliveryLimits[$field];
+                if ($val && strlen($val) > $max) {
+                    return $this->err(ucfirst(str_replace('_', ' ', $field)) . " must be under {$max} characters");
+                }
+                $user->$field = $val ?: null;
+            }
         }
 
         // Password change — requires current password unless Google-only user
@@ -542,7 +573,7 @@ class UserAuthController extends Controller
 
         $data = $request->json()->all();
         $role = $data['role'] ?? null;
-        $validRoles = ['customer', 'admin', 'superadmin'];
+        $validRoles = ['customer', 'superadmin'];
 
         if (!$role || !in_array($role, $validRoles)) {
             return $this->err('Role must be one of: customer, admin, superadmin');

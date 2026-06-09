@@ -60,11 +60,12 @@
         .login-terms a { color: #b8a898; text-decoration: none; border-bottom: 1px solid #b8a898; }
         .login-terms a:hover { color: #1a1a1a; border-color: #1a1a1a; }
         .login-back {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            margin-top: 24px; font-size: 0.82rem; color: #9a9a9a;
-            text-decoration: none; transition: color 0.2s;
+            display: inline-block;
+            margin-top: 28px; font-size: 0.82rem; color: #b8a898;
+            text-decoration: none; letter-spacing: 0.3px; transition: color 0.2s;
+            border-bottom: 1px solid transparent;
         }
-        .login-back:hover { color: #1a1a1a; }
+        .login-back:hover { color: #1a1a1a; border-bottom-color: #1a1a1a; }
         @media (max-width: 480px) { .login-card { padding: 36px 24px 32px; } }
     </style>
 </head>
@@ -93,10 +94,7 @@
             <a href="privacy.html">Privacy Policy</a>.
         </p>
 
-        <a href="../index.html" class="login-back">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            Back to store
-        </a>
+        <a href="../index.html" class="login-back">← &nbsp;Back to store</a>
 
     </div>
 
@@ -128,7 +126,13 @@
                             if (json.success) {
                                 localStorage.setItem('aura_user_token', json.data.token);
                                 localStorage.setItem('aura_user', JSON.stringify(json.data.user));
-                                window.location.href = 'account.html';
+                                // If delivery details not set yet, show completion modal
+                                var u = json.data.user;
+                                if (!u.phone || !u.island) {
+                                    showProfileModal(u);
+                                } else {
+                                    window.location.href = 'account.html';
+                                }
                             } else {
                                 errEl.textContent = json.error || 'Sign-in failed. Please try again.';
                                 errEl.style.display = 'block';
@@ -163,9 +167,93 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('aura_user_token')) {
-                window.location.href = 'account.html';
+                var u = null;
+                try { u = JSON.parse(localStorage.getItem('aura_user')); } catch(e) {}
+                if (u && (!u.phone || !u.island)) {
+                    showProfileModal(u);
+                } else {
+                    window.location.href = 'account.html';
+                }
             }
         });
+
+        function showProfileModal(user) {
+            var inp = function(id, ph, type) {
+                return '<div style="margin-bottom:12px;">' +
+                    '<input id="pm-' + id + '" type="' + (type||'text') + '" placeholder="' + ph + '" maxlength="200" style="' +
+                    'width:100%;padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.9rem;' +
+                    'outline:none;box-sizing:border-box;font-family:inherit;" ' +
+                    'onfocus="this.style.borderColor=\'#b8a898\'" onblur="this.style.borderColor=\'#e0d8cc\'">' +
+                    '</div>';
+            };
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;padding:16px;';
+            overlay.innerHTML =
+                '<div style="background:#fff;border-radius:20px;padding:36px 32px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto;">' +
+                    '<div style="text-align:center;margin-bottom:24px;">' +
+                        '<div style="width:52px;height:52px;background:#f5f1eb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">' +
+                            '<i class="fas fa-map-marker-alt" style="color:#b8a898;font-size:1.3rem;"></i>' +
+                        '</div>' +
+                        '<h2 style="margin:0 0 6px;font-family:\'Playfair Display\',serif;font-size:1.4rem;">Complete your profile</h2>' +
+                        '<p style="margin:0;font-size:0.85rem;color:#999;">Add your delivery details so we know where to send your order.</p>' +
+                    '</div>' +
+                    '<div id="pm-error" style="display:none;background:#fce4e4;border:1.5px solid #f5c6c6;border-radius:8px;padding:9px 12px;font-size:0.83rem;color:#c62828;margin-bottom:14px;"></div>' +
+                    inp('phone',       'Phone number *', 'tel') +
+                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">' +
+                        '<input id="pm-atoll" type="text" placeholder="Atoll (e.g. Kaafu)" maxlength="100" style="padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor=\'#b8a898\'" onblur="this.style.borderColor=\'#e0d8cc\'">' +
+                        '<input id="pm-island" type="text" placeholder="Island *" maxlength="100" style="padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor=\'#b8a898\'" onblur="this.style.borderColor=\'#e0d8cc\'">' +
+                    '</div>' +
+                    inp('address',     'Address / flat number (optional)') +
+                    '<p style="font-size:0.78rem;color:#b8a898;font-weight:600;margin:8px 0 10px;"><i class="fas fa-ship" style="margin-right:4px;"></i>Boat details <span style="font-weight:400;">leave empty if not ordering via boat</span></p>' +
+                    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">' +
+                        '<input id="pm-boat-name" type="text" placeholder="Boat name" maxlength="100" style="padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor=\'#b8a898\'" onblur="this.style.borderColor=\'#e0d8cc\'">' +
+                        '<input id="pm-boat-number" type="text" placeholder="Reg. number" maxlength="50" style="padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.9rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor=\'#b8a898\'" onblur="this.style.borderColor=\'#e0d8cc\'">' +
+                    '</div>' +
+                    '<button id="pm-save-btn" onclick="saveProfileModal()" style="width:100%;padding:13px;background:#b8a898;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;">Save &amp; Continue</button>' +
+                    '<button onclick="window.location.href=\'account.html\'" style="width:100%;padding:10px;background:none;border:none;font-size:0.82rem;color:#b8a898;cursor:pointer;margin-top:8px;">Skip for now</button>' +
+                '</div>';
+            document.body.appendChild(overlay);
+        }
+
+        async function saveProfileModal() {
+            var phone      = document.getElementById('pm-phone').value.trim();
+            var atoll      = document.getElementById('pm-atoll').value.trim();
+            var island     = document.getElementById('pm-island').value.trim();
+            var address    = document.getElementById('pm-address').value.trim();
+            var boatName   = document.getElementById('pm-boat-name').value.trim();
+            var boatNumber = document.getElementById('pm-boat-number').value.trim();
+            var errEl      = document.getElementById('pm-error');
+            var btn        = document.getElementById('pm-save-btn');
+
+            errEl.style.display = 'none';
+            if (!phone)  { errEl.textContent = 'Phone number is required.';  errEl.style.display = 'block'; return; }
+            if (!island) { errEl.textContent = 'Island is required.'; errEl.style.display = 'block'; return; }
+
+            btn.disabled = true; btn.textContent = 'Saving…';
+
+            try {
+                var apiBase = (typeof API_BASE !== 'undefined') ? API_BASE : '';
+                var token = localStorage.getItem('aura_user_token');
+                var res = await fetch(apiBase + '/api/user/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ phone: phone, atoll: atoll, island: island, address: address, boat_name: boatName, boat_number: boatNumber })
+                });
+                var json = await res.json();
+                if (json.success) {
+                    localStorage.setItem('aura_user', JSON.stringify(json.data));
+                    window.location.href = 'account.html';
+                } else {
+                    errEl.textContent = json.error || 'Could not save. Please try again.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false; btn.textContent = 'Save & Continue';
+                }
+            } catch(e) {
+                errEl.textContent = 'Could not connect. Please try again.';
+                errEl.style.display = 'block';
+                btn.disabled = false; btn.textContent = 'Save & Continue';
+            }
+        }
     </script>
     <script src="https://accounts.google.com/gsi/client?onload=googleOnLoad" async defer></script>
 </body>

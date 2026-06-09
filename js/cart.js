@@ -172,10 +172,10 @@ function changeQty(index, delta) {
 function cartCheckout() {
     if (cart.length === 0) return;
 
-    // Pre-fill from logged-in user if available
     const loggedInUser = (typeof authGetUser === 'function') ? authGetUser() : null;
+    const hasProfile = loggedInUser && loggedInUser.phone && loggedInUser.island && loggedInUser.address;
+    const missingFields = loggedInUser && !hasProfile;
 
-    // Build and show checkout modal
     const existing = document.getElementById('checkout-modal-overlay');
     if (existing) existing.remove();
 
@@ -187,87 +187,156 @@ function cartCheckout() {
     `;
     overlay.innerHTML = `
         <div id="checkout-modal" style="
-            background:#fff;border-radius:16px;padding:32px 28px;max-width:420px;width:100%;
-            box-shadow:0 20px 60px rgba(0,0,0,0.18);position:relative;max-height:90vh;overflow-y:auto;
+            background:#fff;border-radius:20px;padding:0;max-width:440px;width:100%;
+            box-shadow:0 20px 60px rgba(0,0,0,0.18);position:relative;max-height:92vh;overflow-y:auto;
         ">
-            <button onclick="document.getElementById('checkout-modal-overlay').remove()" style="
-                position:absolute;top:14px;right:16px;background:none;border:none;
-                font-size:1.2rem;cursor:pointer;color:#999;line-height:1;
-            "><i class="fas fa-times"></i></button>
-            <div style="text-align:center;margin-bottom:20px;">
-                <div style="width:48px;height:48px;background:var(--beige,#e8e0d0);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-                    <i class="fas fa-shopping-basket" style="color:var(--gold-dark,#b8a898);font-size:1.2rem;"></i>
+            <!-- Header -->
+            <div style="padding:24px 28px 0;position:sticky;top:0;background:#fff;z-index:1;border-radius:20px 20px 0 0;">
+                <button onclick="document.getElementById('checkout-modal-overlay').remove()" style="
+                    position:absolute;top:16px;right:20px;background:none;border:none;
+                    font-size:1.1rem;cursor:pointer;color:#b0b0b0;line-height:1;
+                "><i class="fas fa-times"></i></button>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                    <div style="width:40px;height:40px;background:#f5f1eb;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-shopping-basket" style="color:#b8a898;font-size:1rem;"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin:0;font-size:1.1rem;font-weight:700;font-family:'Playfair Display',serif;">Complete Your Order</h3>
+                        <p style="margin:2px 0 0;font-size:0.78rem;color:#999;">We'll confirm payment and delivery with you.</p>
+                    </div>
                 </div>
-                <h3 style="margin:0;font-size:1.25rem;font-weight:700;">Complete Your Order</h3>
-                <p style="margin:6px 0 0;font-size:0.85rem;color:#888;">We'll get back to you to confirm payment and delivery.</p>
+                <div id="co-saved-banner" style="display:none;background:#f5f1eb;border:1.5px solid #e0d8cc;border-radius:8px;padding:8px 12px;font-size:0.8rem;color:#7a6a5a;margin-bottom:12px;">
+                    <i class="fas fa-check-circle" style="color:#b8a898;margin-right:6px;"></i>
+                    Delivery details loaded from your profile.
+                </div>
+                <div id="co-missing-banner" style="display:none;background:#fff8f0;border:1.5px solid #e8ddd0;border-radius:8px;padding:8px 12px;font-size:0.8rem;color:#7a6a5a;margin-bottom:12px;">
+                    <i class="fas fa-info-circle" style="color:#b8a898;margin-right:6px;"></i>
+                    Fill in your details. They'll be saved to your profile.
+                </div>
+                <div style="height:1px;background:#f0efec;margin:0 -28px;"></div>
             </div>
-            <div style="margin-bottom:16px;">
-                <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:#555;">Your Name <span style="color:#e55;">*</span></label>
-                <input id="co-name" type="text" placeholder="Full name" style="
-                    width:100%;padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;
-                    font-size:0.9rem;outline:none;box-sizing:border-box;
-                " onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+
+            <!-- Body -->
+            <div style="padding:20px 28px 28px;">
+
+                <!-- Contact -->
+                <p style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b8a898;margin-bottom:12px;">Contact</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                    <div>
+                        <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Name <span style="color:#e55;">*</span></label>
+                        <input id="co-name" type="text" placeholder="Full name" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Phone <span style="color:#e55;">*</span></label>
+                        <input id="co-phone" type="tel" placeholder="e.g. 9991234" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                    </div>
+                </div>
+                <div style="margin-bottom:18px;">
+                    <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Email <span style="color:#e55;">*</span></label>
+                    <input id="co-email" type="email" placeholder="your@email.com" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                </div>
+
+                <!-- Delivery -->
+                <div style="height:1px;background:#f0efec;margin:0 0 16px;"></div>
+                <p style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b8a898;margin-bottom:12px;">Delivery</p>
+                <div style="margin-bottom:10px;">
+                    <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Island <span style="color:#e55;">*</span></label>
+                    <input id="co-island" type="text" placeholder="e.g. Maafushi" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                </div>
+                <div style="margin-bottom:18px;">
+                    <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Address <span style="color:#e55;">*</span></label>
+                    <input id="co-address" type="text" placeholder="House / flat number" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                </div>
+
+                <!-- Boat -->
+                <div style="height:1px;background:#f0efec;margin:0 0 16px;"></div>
+                <p style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b8a898;margin-bottom:4px;"><i class="fas fa-ship" style="margin-right:5px;"></i>Boat Details</p>
+                <p style="font-size:0.75rem;color:#b0b0b0;margin-bottom:10px;">Leave empty if not ordering via boat.</p>
+                <div id="co-boat-section" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+                    <div>
+                        <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Boat name</label>
+                        <input id="co-boat-name" type="text" placeholder="Boat name" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Reg. number</label>
+                        <input id="co-boat-number" type="text" placeholder="Reg. number" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;box-sizing:border-box;font-family:inherit;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div style="height:1px;background:#f0efec;margin:0 0 16px;"></div>
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:#555;">Notes <span style="font-weight:400;color:#b0b0b0;">(optional)</span></label>
+                    <textarea id="co-notes" placeholder="Occasion, personalisation requests..." rows="3" style="width:100%;padding:9px 12px;border:1.5px solid #e0d8cc;border-radius:8px;font-size:0.88rem;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;" onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'"></textarea>
+                </div>
+
+                <button id="co-submit-btn" onclick="submitOrder()" style="
+                    width:100%;padding:13px;background:#b8a898;color:#fff;border:none;
+                    border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;
+                    display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:0.3px;
+                ">
+                    <i class="fas fa-check-circle"></i> Place Order
+                </button>
+                <p id="co-error" style="display:none;color:#e55;font-size:0.8rem;text-align:center;margin-top:10px;"></p>
             </div>
-            <div style="margin-bottom:16px;">
-                <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:#555;">Email Address <span style="color:#e55;">*</span></label>
-                <input id="co-email" type="email" placeholder="your@email.com" style="
-                    width:100%;padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;
-                    font-size:0.9rem;outline:none;box-sizing:border-box;
-                " onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
-            </div>
-            <div style="margin-bottom:16px;">
-                <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:#555;">Phone Number <span style="color:#e55;">*</span></label>
-                <input id="co-phone" type="tel" placeholder="e.g. 9991234" style="
-                    width:100%;padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;
-                    font-size:0.9rem;outline:none;box-sizing:border-box;
-                " onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'">
-            </div>
-            <div style="margin-bottom:20px;">
-                <label style="display:block;font-size:0.8rem;font-weight:600;margin-bottom:4px;color:#555;">Notes / Special Requests (optional)</label>
-                <textarea id="co-notes" placeholder="Occasion, delivery preferences, personalisation..." rows="3" style="
-                    width:100%;padding:10px 14px;border:1.5px solid #e0d8cc;border-radius:8px;
-                    font-size:0.9rem;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;
-                " onfocus="this.style.borderColor='#b8a898'" onblur="this.style.borderColor='#e0d8cc'"></textarea>
-            </div>
-            <button id="co-submit-btn" onclick="submitOrder()" style="
-                width:100%;padding:13px;background:var(--gold-dark,#b8a898);color:#fff;border:none;
-                border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;
-                display:flex;align-items:center;justify-content:center;gap:8px;
-            ">
-                <i class="fas fa-check-circle"></i> Place Order
-            </button>
-            <p id="co-error" style="display:none;color:#e55;font-size:0.8rem;text-align:center;margin-top:10px;"></p>
         </div>
     `;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-    document.getElementById('co-name').focus();
 
-    // Pre-fill if logged in
+    // Pre-fill from saved profile
     if (loggedInUser) {
-        const nameEl  = document.getElementById('co-name');
-        const emailEl = document.getElementById('co-email');
-        if (nameEl  && !nameEl.value  && loggedInUser.name)  nameEl.value  = loggedInUser.name;
-        if (emailEl && !emailEl.value && loggedInUser.email) emailEl.value = loggedInUser.email;
+        const f = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+        f('co-name',        loggedInUser.name);
+        f('co-email',       loggedInUser.email);
+        f('co-phone',       loggedInUser.phone);
+        f('co-island',      loggedInUser.island);
+        f('co-address',     loggedInUser.address);
+        f('co-boat-name',   loggedInUser.boat_name);
+        f('co-boat-number', loggedInUser.boat_number);
+
+        if (hasProfile) {
+            document.getElementById('co-saved-banner').style.display = 'block';
+            document.getElementById('co-notes').focus();
+        } else {
+            document.getElementById('co-missing-banner').style.display = 'block';
+            if (!loggedInUser.phone) {
+                document.getElementById('co-phone').focus();
+            } else {
+                document.getElementById('co-island').focus();
+            }
+        }
+        if (loggedInUser.island || loggedInUser.boat_name) {
+            document.getElementById('co-boat-section').style.display = 'block';
+        }
+    } else {
+        document.getElementById('co-name').focus();
     }
 }
 
 async function submitOrder() {
-    const nameEl = document.getElementById('co-name');
-    const emailEl = document.getElementById('co-email');
-    const phoneEl = document.getElementById('co-phone');
-    const notesEl = document.getElementById('co-notes');
-    const errEl = document.getElementById('co-error');
-    const btn = document.getElementById('co-submit-btn');
+    const nameEl   = document.getElementById('co-name');
+    const emailEl  = document.getElementById('co-email');
+    const phoneEl  = document.getElementById('co-phone');
+    const islandEl = document.getElementById('co-island');
+    const notesEl  = document.getElementById('co-notes');
+    const errEl    = document.getElementById('co-error');
+    const btn      = document.getElementById('co-submit-btn');
 
-    const name = nameEl ? nameEl.value.trim() : '';
-    const email = emailEl ? emailEl.value.trim() : '';
-    const phone = phoneEl ? phoneEl.value.trim() : '';
-    const notes = notesEl ? notesEl.value.trim() : '';
+    const name   = nameEl   ? nameEl.value.trim()   : '';
+    const email  = emailEl  ? emailEl.value.trim()  : '';
+    const phone  = phoneEl  ? phoneEl.value.trim()  : '';
+    const island = islandEl ? islandEl.value.trim() : '';
+    const notes  = notesEl  ? notesEl.value.trim()  : '';
+    const address    = (document.getElementById('co-address')     || {}).value?.trim() || '';
+    const boatName   = (document.getElementById('co-boat-name')   || {}).value?.trim() || '';
+    const boatNumber = (document.getElementById('co-boat-number') || {}).value?.trim() || '';
 
-    if (!name) { showCoError('Please enter your name.'); nameEl && nameEl.focus(); return; }
+    if (!name)   { showCoError('Please enter your name.');               nameEl  && nameEl.focus();   return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showCoError('Please enter a valid email address.'); emailEl && emailEl.focus(); return; }
-    if (!phone) { showCoError('Please enter your phone number.'); phoneEl && phoneEl.focus(); return; }
+    if (!phone)  { showCoError('Please enter your phone number.');       phoneEl && phoneEl.focus();  return; }
+    if (!island) { showCoError('Please enter your island.');             islandEl && islandEl.focus(); return; }
+    if (!address){ showCoError('Please enter your address.');            document.getElementById('co-address')?.focus(); return; }
 
     // Build items array with numeric price
     const items = cart.map(item => {
@@ -290,15 +359,33 @@ async function submitOrder() {
             headers,
             credentials: 'include',
             body: JSON.stringify({
-                customer_name: name,
+                customer_name:  name,
                 customer_email: email,
                 customer_phone: phone,
+                island,
+                address,
+                boat_name:   boatName,
+                boat_number: boatNumber,
                 items,
                 notes
             })
         });
         const json = await res.json();
         if (res.ok && json.success !== false) {
+            // Always save delivery details to profile if logged in
+            const shouldSave = userToken && (phone || island);
+            if (shouldSave) {
+                const apiBase2 = (typeof API_BASE !== 'undefined') ? API_BASE : '';
+                fetch(apiBase2 + '/api/user/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + userToken },
+                    body: JSON.stringify({ phone, island, address, boat_name: boatName, boat_number: boatNumber })
+                }).then(r => r.json()).then(j => {
+                    if (j.success && j.data && typeof authSetSession === 'function') {
+                        authSetSession(userToken, j.data);
+                    }
+                }).catch(() => {});
+            }
             // Success: clear cart, close modal, show toast
             cart = [];
             saveCart();

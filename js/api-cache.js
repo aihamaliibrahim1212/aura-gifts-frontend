@@ -15,12 +15,12 @@ if ('serviceWorker' in navigator) {
 // ── Offline check ─────────────────────────────────────────────────────────
 (function checkStatus() {
     if (window.location.pathname.includes('maintenance.html')) return;
-    // Only redirect to maintenance after 2 failed attempts with a delay
-    // Prevents false positives on hard refresh when server is briefly busy
+    // Only redirect to maintenance when the server is actually unreachable
+    // (fetch fails = server offline). Ignore any maintenance flag in the response.
     var attempts = 0;
     function check() {
         fetch(API_BASE + '/api/status', { cache: 'no-store' })
-            .then(function(r) { /* server is up, do nothing */ })
+            .then(function(r) { /* server is up — do nothing regardless of response body */ })
             .catch(function() {
                 attempts++;
                 if (attempts >= 2) {
