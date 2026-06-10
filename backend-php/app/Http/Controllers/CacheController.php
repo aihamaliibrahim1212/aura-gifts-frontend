@@ -17,6 +17,8 @@ class CacheController extends Controller
             glob($projectRoot . '/*.html') ?: [],
             glob($projectRoot . '/pages/*.html') ?: [],
             glob($projectRoot . '/backend/admin-panel/*.html') ?: [],
+            glob($projectRoot . '/backend/admin-panel/static/*.css') ?: [],
+            glob($projectRoot . '/backend/admin-panel/static/*.js') ?: [],
             glob($projectRoot . '/css/*.css') ?: [],
             glob($projectRoot . '/js/*.js') ?: []
         );
