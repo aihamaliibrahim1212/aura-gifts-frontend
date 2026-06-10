@@ -198,7 +198,7 @@ function showAuthDropdown() {
 
     var dropdown = document.createElement('div');
     dropdown.id = 'auth-dropdown';
-    dropdown.style.cssText = 'position:fixed;top:172px;right:212px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
+    dropdown.style.cssText = 'position:fixed;top:172px;right:192px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
 
     // User header
     var header = document.createElement('div');
