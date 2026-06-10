@@ -10,6 +10,7 @@ use App\Models\Review;
 use App\Models\Faq;
 use App\Models\SiteContent;
 use App\Models\Banner;
+use App\Models\SavedCart;
 use Cloudinary\Cloudinary;
 use Cloudinary\Configuration\Configuration;
 use Illuminate\Http\Request;
@@ -155,7 +156,39 @@ class AdminController extends Controller
     public function listProducts()
     {
         $products = Product::orderByDesc('created_at')->get();
-        return $this->ok($products->map->toApiArray()->values());
+        return $this->ok($products->map(function ($p) {
+            $data = $p->toApiArray();
+
+            $soldsCount = 0;
+            $cartCount = 0;
+
+            // Count times product was sold (in delivered orders)
+            foreach (Order::where('status', 'delivered')->get() as $order) {
+                if (is_array($order->items)) {
+                    foreach ($order->items as $item) {
+                        if (isset($item['product_id']) && $item['product_id'] == $p->id) {
+                            $soldsCount += $item['quantity'] ?? 1;
+                        }
+                    }
+                }
+            }
+
+            // Count users with product in saved cart
+            foreach (SavedCart::get() as $cart) {
+                if (is_array($cart->items)) {
+                    foreach ($cart->items as $item) {
+                        if (isset($item['product_id']) && $item['product_id'] == $p->id) {
+                            $cartCount++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $data['sold_count'] = $soldsCount;
+            $data['cart_count'] = $cartCount;
+            return $data;
+        })->values());
     }
 
     public function createProduct(Request $request)

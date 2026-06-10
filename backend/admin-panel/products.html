@@ -5,7 +5,7 @@
   <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aura Admin</title>
-  <style>html,body{background:#f8f8f6;}</style><link rel="stylesheet" href="/admin/static/admin.css?v=5" />
+  <style>html,body{background:#f8f8f6;}</style><link rel="stylesheet" href="/admin/static/admin.css?v=9" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -105,8 +105,9 @@
         <div class="card">
           <div class="card-header">
             <h3>All Products</h3>
-            <input type="text" id="searchInput" placeholder="Search products…" class="form-control" style="max-width:220px;" oninput="filterProducts()">
+            <input type="text" id="searchInput" placeholder="Search products…" class="form-control" style="max-width:220px;width:100%;" oninput="filterProducts()">
           </div>
+          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
           <table class="table" id="productsTable">
             <thead>
               <tr>
@@ -115,14 +116,17 @@
                 <th>Name</th>
                 <th>Price (MVR)</th>
                 <th>Stock</th>
+                <th>Sold</th>
+                <th>In Cart</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="productsBody">
-              <tr><td colspan="8" class="text-center text-muted">Loading…</td></tr>
+              <tr><td colspan="9" class="text-center text-muted">Loading…</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
       </main>
     </div>
@@ -216,7 +220,8 @@
   </div>
 
   <div id="toast" class="toast"></div>
-  <script src="/admin/static/admin.js"></script>
+  <script src="/admin/static/admin.js?v=1"></script>
+  <script>window.scrollTo(0, 0);</script>
   <script>
     requireAuth();
 
@@ -258,7 +263,7 @@
     function renderProducts(products) {
       const tbody = document.getElementById('productsBody');
       if (!products.length) {
-        tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><p>No products found</p></div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><p>No products found</p></div></td></tr>';
         return;
       }
       tbody.innerHTML = products.map((p, idx) => `
@@ -279,7 +284,9 @@
             ${p.badge ? `<span class="badge badge-blue" style="margin-left:6px;">${escHtml(p.badge)}</span>` : ''}
           </td>
           <td>MVR ${(p.price_mvr || 0).toFixed(2)}</td>
-          <td><span class="stock-badge ${stockClass(p.stock)}">${p.stock}</span></td>
+          <td>${p.stock}</td>
+          <td>${p.sold_count ?? 0}</td>
+          <td>${p.cart_count ?? 0}</td>
           <td><span class="badge ${p.is_active ? 'badge-green' : 'badge-gray'}">${p.is_active ? 'Active' : 'Inactive'}</span></td>
           <td class="d-flex gap-8">
             <button class="btn btn-outline btn-sm" onclick="editProduct(${p.id})">Edit</button>

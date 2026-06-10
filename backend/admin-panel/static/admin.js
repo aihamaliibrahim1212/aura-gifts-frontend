@@ -8,29 +8,15 @@ const API_BASE = 'http://localhost:8000';
 const TOKEN_KEY = 'aura_user_token';
 const USER_KEY  = 'aura_user';
 
-// ── Prevent scroll restoration on refresh ───────────────────
-(function() {
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.addEventListener('load', function() { window.scrollTo(0, 0); });
+// Disable browser scroll restoration
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('load', () => { window.scrollTo(0, 0); });
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => { window.scrollTo(0, 0); });
+} else {
+  window.scrollTo(0, 0);
+}
 
-  // Save scroll position before unload
-  window.addEventListener('beforeunload', function() {
-    sessionStorage.setItem('_adminScrollY_' + location.pathname, window.scrollY);
-  });
-
-  // On load, if it was a browser refresh, scroll back smoothly
-  window.addEventListener('load', function() {
-    var nav = performance.getEntriesByType('navigation')[0];
-    var savedY = parseInt(sessionStorage.getItem('_adminScrollY_' + location.pathname) || '0', 10);
-    if (nav && nav.type === 'reload' && savedY > 0) {
-      setTimeout(function() {
-        window.scrollTo({ top: savedY, behavior: 'smooth' });
-      }, 120);
-    } else {
-      sessionStorage.removeItem('_adminScrollY_' + location.pathname);
-    }
-  });
-})();
 
 function getToken() {
   return localStorage.getItem(TOKEN_KEY);
