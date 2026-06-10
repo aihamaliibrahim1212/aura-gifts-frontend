@@ -209,12 +209,12 @@ function showAuthDropdown() {
         rightVal = 90;
     } else if (width < 768) {
         // Mobile
-        topVal = 108;
+        topVal = 100;
         rightVal = 16;
     } else {
         // Tablet: smooth interpolation between desktop and mobile
         var ratio = (width - 768) / (1024 - 768);
-        topVal = Math.round(108 - (18 * ratio));
+        topVal = Math.round(100 - (10 * ratio));
         rightVal = Math.round(16 + (74 * ratio));
     }
 
