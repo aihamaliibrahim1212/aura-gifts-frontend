@@ -8,18 +8,17 @@ class CacheController extends Controller
 {
     public function incrementVersions(Request $request)
     {
-        $projectRoot = base_path();
+        $projectRoot = dirname(base_path()); // Go up one level from backend-php
         $updated = [];
         $errors = [];
 
-        // Get all HTML, CSS, JS, and PHP files
+        // Get all HTML, CSS, JS files - adjust paths relative to project root
         $files = array_merge(
             glob($projectRoot . '/*.html') ?: [],
             glob($projectRoot . '/pages/*.html') ?: [],
             glob($projectRoot . '/backend/admin-panel/*.html') ?: [],
             glob($projectRoot . '/css/*.css') ?: [],
-            glob($projectRoot . '/js/*.js') ?: [],
-            glob($projectRoot . '/backend-php/resources/views/*.php') ?: []
+            glob($projectRoot . '/js/*.js') ?: []
         );
 
         foreach ($files as $file) {
