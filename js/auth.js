@@ -199,14 +199,26 @@ function showAuthDropdown() {
     var dropdown = document.createElement('div');
     dropdown.id = 'auth-dropdown';
 
-    var posStyle = 'position:fixed;top:90px;right:90px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
+    // Smooth responsive positioning based on viewport width
+    var width = window.innerWidth;
+    var topVal, rightVal;
 
-    // Mobile only adjustment
-    if (window.innerWidth < 768) {
-        posStyle = 'position:fixed;top:108px;right:16px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
+    if (width >= 1024) {
+        // Desktop
+        topVal = 90;
+        rightVal = 90;
+    } else if (width < 768) {
+        // Mobile
+        topVal = 108;
+        rightVal = 16;
+    } else {
+        // Tablet: smooth interpolation between desktop and mobile
+        var ratio = (width - 768) / (1024 - 768);
+        topVal = Math.round(108 - (18 * ratio));
+        rightVal = Math.round(16 + (74 * ratio));
     }
 
-    dropdown.style.cssText = posStyle;
+    dropdown.style.cssText = 'position:fixed;top:' + topVal + 'px;right:' + rightVal + 'px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
 
     // User header
     var header = document.createElement('div');
