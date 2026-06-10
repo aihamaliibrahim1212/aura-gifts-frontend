@@ -665,7 +665,7 @@ class AdminController extends Controller
         }
     }
 
-    // ── Users ─────────────────────────────────────────────────────────────
+    public function listUsers()
     {
         $requester = $this->currentUser();
         if (!$requester || $requester->role !== 'superadmin') {
