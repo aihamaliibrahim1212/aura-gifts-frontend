@@ -170,7 +170,6 @@ function closeSidebar() {
   if (backdrop) backdrop.classList.remove('show');
 }
 
-// Inject backdrop once DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   if (!document.getElementById('sidebarBackdrop')) {
     const bd = document.createElement('div');
@@ -178,6 +177,27 @@ document.addEventListener('DOMContentLoaded', () => {
     bd.className = 'sidebar-backdrop';
     bd.onclick = closeSidebar;
     document.body.appendChild(bd);
+  }
+
+  const adminName = document.getElementById('adminName');
+  if (adminName) {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'profile-dropdown';
+    dropdown.id = 'profileDropdown';
+    dropdown.innerHTML = `
+      <button class="profile-dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt" style="margin-right:8px;"></i>Logout</button>
+    `;
+    adminName.parentElement.style.position = 'relative';
+    adminName.parentElement.appendChild(dropdown);
+
+    adminName.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+      dropdown.classList.remove('open');
+    });
   }
 });
 
