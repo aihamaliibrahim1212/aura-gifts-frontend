@@ -614,7 +614,58 @@ class AdminController extends Controller
         }
     }
 
-    public function listUsers()
+    public function incrementCacheVersions()
+    {
+        try {
+            $basePath = base_path('../');
+            $updatedFiles = [];
+
+            // Find all HTML, CSS, and JS files
+            $files = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($basePath, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST
+            );
+
+            foreach ($files as $file) {
+                if (!$file->isFile()) continue;
+
+                $ext = strtolower($file->getExtension());
+                if (!in_array($ext, ['html', 'css', 'js', 'php'])) continue;
+
+                // Skip vendor and node_modules
+                $path = $file->getPathname();
+                if (strpos($path, 'vendor') !== false || strpos($path, 'node_modules') !== false) continue;
+
+                $content = file_get_contents($path);
+                $originalContent = $content;
+
+                // Match patterns like ?v=X and increment X
+                $content = preg_replace_callback(
+                    '/(\?v=|v=)(\d+)/i',
+                    function ($matches) {
+                        return $matches[1] . ((int)$matches[2] + 1);
+                    },
+                    $content
+                );
+
+                // If content changed, write it back
+                if ($content !== $originalContent) {
+                    file_put_contents($path, $content);
+                    $updatedFiles[] = str_replace($basePath, '', $path);
+                }
+            }
+
+            return $this->ok([
+                'message' => 'Cache versions incremented',
+                'files_updated' => count($updatedFiles),
+                'files' => array_slice($updatedFiles, 0, 20) // Return first 20 for preview
+            ]);
+        } catch (\Exception $e) {
+            return $this->err('Failed to increment versions: ' . $e->getMessage(), 500);
+        }
+    }
+
+    // ── Users ─────────────────────────────────────────────────────────────
     {
         $requester = $this->currentUser();
         if (!$requester || $requester->role !== 'superadmin') {

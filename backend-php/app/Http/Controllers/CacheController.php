@@ -8,65 +8,55 @@ class CacheController extends Controller
 {
     public function incrementVersions(Request $request)
     {
-        $files = [
-            'js/auth.js' => '/js/auth.js',
-            'js/api-cache.js' => '/js/api-cache.js',
-            'js/main.js' => '/js/main.js',
-            'js/cart.js' => '/js/cart.js',
-            'css/style.css' => '/css/style.css',
-            'css/auth.css' => '/css/auth.css'
-        ];
-
         $projectRoot = base_path();
         $updated = [];
         $errors = [];
 
-        foreach ($files as $fileName => $filePath) {
-            $pattern = preg_quote($filePath) . '\?v=(\d+)';
+        // Get all HTML, CSS, JS, and PHP files
+        $files = array_merge(
+            glob($projectRoot . '/*.html') ?: [],
+            glob($projectRoot . '/pages/*.html') ?: [],
+            glob($projectRoot . '/backend/admin-panel/*.html') ?: [],
+            glob($projectRoot . '/css/*.css') ?: [],
+            glob($projectRoot . '/js/*.js') ?: [],
+            glob($projectRoot . '/backend-php/resources/views/*.php') ?: []
+        );
 
-            $htmlFiles = array_merge(
-                glob($projectRoot . '/*.html') ?: [],
-                glob($projectRoot . '/pages/*.html') ?: [],
-                glob($projectRoot . '/backend/admin-panel/*.html') ?: []
+        foreach ($files as $file) {
+            if (!is_file($file)) continue;
+
+            $content = file_get_contents($file);
+            if ($content === false) {
+                $errors[] = "Could not read " . basename($file);
+                continue;
+            }
+
+            // Match any ?v=NUMBER or v=NUMBER pattern and increment
+            $newContent = preg_replace_callback(
+                '/(\?v=|v=)(\d+)/',
+                function ($matches) {
+                    $newVersion = (int)$matches[2] + 1;
+                    return $matches[1] . $newVersion;
+                },
+                $content
             );
 
-            foreach ($htmlFiles as $htmlFile) {
-                $content = file_get_contents($htmlFile);
-                $newContent = preg_replace_callback(
-                    '/' . $pattern . '/',
-                    function($matches) {
-                        $newVersion = (int)$matches[1] + 1;
-                        return substr($matches[0], 0, -strlen($matches[1])) . $newVersion;
-                    },
-                    $content
-                );
-
-                if ($newContent !== $content) {
-                    if (file_put_contents($htmlFile, $newContent)) {
-                        if (!isset($updated[$fileName])) {
-                            $updated[$fileName] = 0;
-                        }
-                        $updated[$fileName]++;
-                    } else {
-                        $errors[] = "Failed to update " . basename($htmlFile);
-                    }
+            if ($newContent !== $content) {
+                if (file_put_contents($file, $newContent)) {
+                    $relPath = str_replace($projectRoot . '/', '', $file);
+                    $updated[$relPath] = 'updated';
+                } else {
+                    $errors[] = "Failed to update " . basename($file);
                 }
             }
         }
 
-        if (empty($errors)) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Cache versions incremented successfully',
-                'updated' => $updated
-            ]);
-        }
-
         return response()->json([
-            'success' => false,
-            'error' => 'Some files failed to update',
-            'errors' => $errors,
-            'updated' => $updated
-        ], 500);
+            'success' => empty($errors),
+            'message' => 'Cache versions incremented successfully',
+            'files_updated' => count($updated),
+            'updated_files' => array_slice(array_keys($updated), 0, 50),
+            'errors' => $errors
+        ]);
     }
 }
