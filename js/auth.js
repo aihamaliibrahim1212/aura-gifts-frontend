@@ -202,8 +202,8 @@ function showAuthDropdown() {
     // Responsive positioning: adjust for mobile/tablet only
     var topVal = 90, rightVal = 90;
     if (window.innerWidth < 768) {
-        // Mobile: position below header
-        topVal = 65;
+        // Mobile: align with banner top line
+        topVal = 108;
         rightVal = 16;
     } else if (window.innerWidth < 1024) {
         // Tablet: slight adjustment
