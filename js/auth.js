@@ -122,23 +122,7 @@ async function authSaveCartToServer() {
 // Called both from the inline boot script (sync, pre-paint) and from
 // DOMContentLoaded (to handle mobile menu). Keep this function pure / side-effect free.
 function _authNavHTML(user, isInPages) {
-    var loginHref   = isInPages ? 'login.html'   : 'pages/login.html';
-    var accountHref = isInPages ? 'account.html' : 'pages/account.html';
-
-    if (user) {
-        var avatar = user.avatar_url
-            ? '<img src="' + _escAttr(user.avatar_url) + '" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border-gray);flex-shrink:0;">'
-            : '<span style="width:26px;height:26px;border-radius:50%;background:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.68rem;color:var(--text-dark);flex-shrink:0;">' + _initials(user.name) + '</span>';
-        return '<a href="' + accountHref + '" class="auth-header-btn" title="My Account">' +
-            avatar +
-            '<span class="auth-btn-label">' + _esc((user.name || '').split(' ')[0]) + '</span>' +
-            '</a>';
-    } else {
-        return '<a href="' + loginHref + '" class="auth-header-btn" title="Sign In">' +
-            '<i class="fas fa-user" style="font-size:0.82rem;"></i>' +
-            '<span class="auth-btn-label">Sign In</span>' +
-            '</a>';
-    }
+    return '<i class="fas fa-user" style="font-size:1rem;color:#787878;"></i>';
 }
 
 function authUpdateNav() {
@@ -149,6 +133,28 @@ function authUpdateNav() {
     var btn = document.getElementById('auth-nav-btn');
     if (btn) {
         btn.innerHTML = _authNavHTML(user, isInPages);
+
+        // Remove old dropdown if exists
+        var oldDropdown = document.getElementById('auth-dropdown');
+        if (oldDropdown) oldDropdown.remove();
+
+        if (user) {
+            // When logged in, show dropdown on click
+            btn.style.cursor = 'pointer';
+            btn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var dropdown = document.getElementById('auth-dropdown');
+                if (dropdown) {
+                    dropdown.remove();
+                } else {
+                    showAuthDropdown();
+                }
+            };
+        } else if (typeof openAuthModal !== 'undefined') {
+            // When logged out, open modal
+            btn.onclick = openAuthModal;
+        }
     }
 
     // ── Mobile menu ──
@@ -163,14 +169,18 @@ function authUpdateNav() {
         if (user) {
             a.href      = isInPages ? 'account.html' : 'pages/account.html';
             a.innerHTML = '<i class="fas fa-user-circle" style="margin-right:8px;color:var(--gold-dark);"></i> My Account (' + _esc((user.name || '').split(' ')[0]) + ')';
+            a.onclick = function() {
+                if (typeof closeMobileMenu === 'function') closeMobileMenu();
+            };
         } else {
-            a.href      = isInPages ? 'login.html' : 'pages/login.html';
+            a.href      = '#';
             a.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right:8px;color:var(--gold-dark);"></i> Sign In / Register';
+            a.onclick   = function(e) {
+                e.preventDefault();
+                if (typeof openAuthModal !== 'undefined') openAuthModal();
+                if (typeof closeMobileMenu === 'function') closeMobileMenu();
+            };
         }
-
-        a.onclick = function() {
-            if (typeof closeMobileMenu === 'function') closeMobileMenu();
-        };
 
         var lastLink = mobileMenu.querySelector('nav a:last-child');
         if (lastLink) {
@@ -178,6 +188,75 @@ function authUpdateNav() {
         } else {
             mobileMenu.appendChild(a);
         }
+    }
+}
+
+function showAuthDropdown() {
+    var isInPages = window.location.pathname.includes('/pages/');
+    var accountHref = isInPages ? 'account.html' : 'pages/account.html';
+    var user = authGetUser();
+
+    var dropdown = document.createElement('div');
+    dropdown.id = 'auth-dropdown';
+    dropdown.style.cssText = 'position:fixed;top:172px;right:212px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
+
+    // User header
+    var header = document.createElement('div');
+    header.style.cssText = 'padding:14px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:10px;background:#faf8f5;';
+
+    var avatar;
+    if (user && user.avatar_url) {
+        avatar = document.createElement('img');
+        avatar.src = user.avatar_url;
+        avatar.style.cssText = 'width:36px;height:36px;border-radius:50%;object-fit:cover;border:1.5px solid #e0d8cc;flex-shrink:0;';
+    } else {
+        avatar = document.createElement('span');
+        avatar.style.cssText = 'width:36px;height:36px;border-radius:50%;background:#b8a898;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;color:#fff;flex-shrink:0;';
+        avatar.textContent = _initials(user ? user.name : '?');
+    }
+    header.appendChild(avatar);
+
+    var nameDiv = document.createElement('div');
+    nameDiv.style.cssText = 'display:flex;flex-direction:column;min-width:0;';
+    var nameSpan = document.createElement('div');
+    nameSpan.style.cssText = 'font-weight:600;font-size:0.9rem;color:#1a1a1a;word-break:break-word;';
+    nameSpan.textContent = user ? user.name : 'User';
+    nameDiv.appendChild(nameSpan);
+    header.appendChild(nameDiv);
+
+    dropdown.appendChild(header);
+
+    // Account link
+    var accountLink = document.createElement('a');
+    accountLink.href = accountHref;
+    accountLink.style.cssText = 'display:block;padding:12px 14px;color:#1a1a1a;text-decoration:none;font-size:0.9rem;border-bottom:1px solid #f0f0f0;transition:background 0.2s;';
+    accountLink.innerHTML = '<i class="fas fa-user" style="margin-right:8px;color:#b8a898;width:16px;"></i>Account';
+    accountLink.onmouseover = function() { this.style.background = '#f5f1eb'; };
+    accountLink.onmouseout = function() { this.style.background = 'none'; };
+
+    // Logout link
+    var logoutLink = document.createElement('a');
+    logoutLink.href = '#';
+    logoutLink.style.cssText = 'display:block;padding:12px 14px;color:#1a1a1a;text-decoration:none;font-size:0.9rem;transition:background 0.2s;cursor:pointer;';
+    logoutLink.innerHTML = '<i class="fas fa-sign-out-alt" style="margin-right:8px;color:#b8a898;width:16px;"></i>Logout';
+    logoutLink.onmouseover = function() { this.style.background = '#f5f1eb'; };
+    logoutLink.onmouseout = function() { this.style.background = 'none'; };
+    logoutLink.onclick = function(e) { e.preventDefault(); authLogout(); };
+
+    dropdown.appendChild(accountLink);
+    dropdown.appendChild(logoutLink);
+    document.body.appendChild(dropdown);
+
+    // Close dropdown when clicking elsewhere
+    setTimeout(function() {
+        document.addEventListener('click', closeDropdown, { once: true });
+    }, 0);
+}
+
+function closeDropdown(e) {
+    var dropdown = document.getElementById('auth-dropdown');
+    if (dropdown && !dropdown.contains(e.target) && !document.getElementById('auth-nav-btn').contains(e.target)) {
+        dropdown.remove();
     }
 }
 

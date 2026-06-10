@@ -72,7 +72,7 @@ header.scrolled {
     position: relative;
 }
 .header-right {
-    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+    display: flex; align-items: center; gap: 0px; flex-shrink: 0;
 }
 .header-search-wrap {
     position: absolute;
@@ -123,7 +123,7 @@ header.scrolled {
 .btn {
     padding: 10px 22px; border-radius: 6px; font-weight: 600;
     text-decoration: none; display: inline-flex; align-items: center;
-    gap: 8px; transition: all 0.25s ease; cursor: pointer;
+    gap: 0px; transition: all 0.25s ease; cursor: pointer;
     border: none; font-family: 'Inter', sans-serif;
     font-size: 0.9rem; white-space: nowrap;
 }
@@ -162,7 +162,7 @@ header.scrolled {
     gap: 60px; align-items: center; position: relative; z-index: 2;
 }
 .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 0px;
     background: var(--gold); color: var(--text-dark);
     padding: 6px 14px; border-radius: 20px;
     font-size: 0.8rem; font-weight: 600; letter-spacing: 1.5px;
@@ -551,7 +551,7 @@ footer { background: #787878; color: rgba(255,255,255,0.85); padding: 60px 0 28p
 .search-dd-badge { font-size: 0.75rem; color: var(--gold-dark); margin-top: 2px; }
 .search-dd-none { color: var(--text-light); cursor: default; font-style: italic; }
 .search-dd-none:hover { background: none; }
-.search-dd-all { color: var(--text-mid); font-size: 0.85rem; gap: 8px; }
+.search-dd-all { color: var(--text-mid); font-size: 0.85rem; gap: 0px; }
 .search-dd-all i { color: var(--gold-dark); }
 
 /* ─── Mobile Header ──────────────────────────────────────────────── */
@@ -692,7 +692,7 @@ footer { background: #787878; color: rgba(255,255,255,0.85); padding: 60px 0 28p
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0px;
     margin-bottom: 10px;
 }
 .cart-toast-label i { color: var(--gold); }
@@ -808,7 +808,7 @@ footer { background: #787878; color: rgba(255,255,255,0.85); padding: 60px 0 28p
 .banner-dots {
     position: absolute; bottom: 18px; left: 50%;
     transform: translateX(-50%);
-    display: flex; gap: 8px; z-index: 10;
+    display: flex; gap: 0px; z-index: 10;
 }
 .banner-dot {
     width: 8px; height: 8px; border-radius: 50%;

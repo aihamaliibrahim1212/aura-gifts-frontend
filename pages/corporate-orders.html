@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css?v=12">
     <link rel="stylesheet" href="../css/auth.css?v=4"><style>html,body{background:#fff;}</style>
-    <script src="../js/auth.js?v=1" defer></script>
+    <script src="../js/auth.js?v=2" defer></script>
 </head>
 <body>
 
@@ -27,7 +27,7 @@
                 <i class="fas fa-search header-search-icon"></i>
                 <input type="text" id="hamper-search" placeholder="Search hampers..." autocomplete="off">
             </div>
-            <div class="header-right"><div id="auth-nav-btn"><script>(function(){var t=localStorage.getItem('aura_user_token'),u=null;if(t){try{u=JSON.parse(localStorage.getItem('aura_user'));}catch(e){}}var p=location.pathname.indexOf('/pages/')!==-1;var lo=p?'login.html':'pages/login.html';var ac=p?'account.html':'pages/account.html';function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}function ini(n){return(n||'?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();}var el=document.getElementById('auth-nav-btn');if(!el)return;if(u&&u.name){var av=u.avatar_url?'<img src="'+esc(u.avatar_url)+'" alt="" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border-gray);flex-shrink:0;">':'<span style="width:26px;height:26px;border-radius:50%;background:var(--gold);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.68rem;color:var(--text-dark);flex-shrink:0;">'+ini(u.name)+'</span>';el.innerHTML='<a href="'+ac+'" class="auth-header-btn" title="My Account">'+av+'<span class="auth-btn-label">'+esc(u.name.split(' ')[0])+'</span></a>';} else {el.innerHTML='<a href="'+lo+'" class="auth-header-btn" title="Sign In"><i class="fas fa-user" style="font-size:0.82rem;"></i><span class="auth-btn-label">Sign In</span></a>';}})();</script></div><button class="cart-btn" onclick="toggleCart()"><i class="fas fa-shopping-basket"></i><span class="cart-count"></span></button><button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button></div>
+            <div class="header-right"><button id="auth-nav-btn" class="auth-header-btn" style="background:none;border:none;cursor:pointer;padding:0px;margin:0px;display:flex;align-items:center;gap:8px;margin-right:-40px;" title="Account"><i class="fas fa-user" style="font-size:1rem;color:#787878;"></i></button><button class="cart-btn" onclick="toggleCart()"><i class="fas fa-shopping-basket"></i><span class="cart-count"></span></button><button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button></div>
         </div>
         <div class="container">
             <nav class="navbar" id="desktop-nav">
@@ -52,6 +52,17 @@
         </nav>
     </div>
     <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px;">
+        <div style="background:#fff;border-radius:16px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center;position:relative;">
+            <button onclick="closeAuthModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#ccc;transition:color 0.2s;width:32px;height:32px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.color='#999'" onmouseout="this.style.color='#ccc'"><i class="fas fa-times"></i></button>
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:4px;color:#1a1a1a;letter-spacing:0.3px;">Welcome</h2>
+            <p style="font-size:0.85rem;color:#999;margin-bottom:24px;line-height:1.5;">Sign in to your account or create a new one</p>
+            <a href="login.html" style="display:block;width:100%;padding:13px 14px;background:#b8a898;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:background 0.2s;text-align:center;">Sign In</a>
+            <a href="register.html" style="display:block;width:100%;padding:13px 14px;background:none;border:1.5px solid #e0d8cc;color:#b8a898;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='#b8a898';this.style.background='#faf8f5'" onmouseout="this.style.borderColor='#e0d8cc';this.style.background='none'">Create Account</a>
+        </div>
+    </div>
 
     <!-- Hero -->
     <div class="page-top-offset" style="background:var(--off-white);border-bottom:1px solid var(--border-gray);padding:56px 0 44px;text-align:center;">
@@ -214,5 +225,16 @@
             document.body.style.overflow = '';
         }
     </script>    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+    <script>
+    function openAuthModal() {
+        document.getElementById('auth-modal').style.display = 'flex';
+    }
+    function closeAuthModal() {
+        document.getElementById('auth-modal').style.display = 'none';
+    }
+    document.getElementById('auth-modal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeAuthModal();
+    });
+    </script>
     </body>
 </html>

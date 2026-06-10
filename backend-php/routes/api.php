@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CacheController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserAuthController;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -53,6 +54,9 @@ Route::middleware('user.admin.auth')->prefix('admin')->group(function () {
 
     // Maintenance
     Route::post('/maintenance',      [AdminController::class, 'setMaintenance']);
+
+    // Cache
+    Route::post('/increment-cache-versions', [CacheController::class, 'incrementVersions']);
 
     // Products
     Route::get('/products',                         [AdminController::class, 'listProducts']);

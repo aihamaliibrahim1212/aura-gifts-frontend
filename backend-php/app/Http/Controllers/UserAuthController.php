@@ -406,8 +406,8 @@ class UserAuthController extends Controller
         }
 
         // Delivery fields
-        $deliveryFields = ['phone', 'atoll', 'island', 'address', 'boat_name', 'boat_number'];
-        $deliveryLimits = ['phone' => 30, 'atoll' => 100, 'island' => 100, 'address' => 300, 'boat_name' => 100, 'boat_number' => 50];
+        $deliveryFields = ['phone', 'island', 'address', 'boat_name', 'boat_number'];
+        $deliveryLimits = ['phone' => 30, 'island' => 100, 'address' => 300, 'boat_name' => 100, 'boat_number' => 50];
         foreach ($deliveryFields as $field) {
             if (array_key_exists($field, $data)) {
                 $val = trim((string) ($data[$field] ?? ''));
