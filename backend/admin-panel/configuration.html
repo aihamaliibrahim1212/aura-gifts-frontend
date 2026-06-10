@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Configuration - Aura Admin</title>
   <style>html,body{background:#f8f8f6;}</style>
@@ -78,26 +79,6 @@
       <main class="content">
         <div class="card">
           <div class="card-header">
-            <h3><i class="fas fa-cog"></i> Site Settings</h3>
-          </div>
-          <div style="padding:20px;">
-            <div class="form-group">
-              <label class="section-label-admin">Site Title</label>
-              <input type="text" class="form-control" placeholder="Aura Gifts" value="Aura Gifts" />
-            </div>
-            <div class="form-group">
-              <label class="section-label-admin">Contact Email</label>
-              <input type="email" class="form-control" placeholder="contact@aura-gifts.com" />
-            </div>
-            <div class="form-group">
-              <label class="section-label-admin">Phone Number</label>
-              <input type="tel" class="form-control" placeholder="+960 123 4567" />
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
             <h3><i class="fas fa-sync-alt"></i> Cache Management</h3>
           </div>
           <div style="padding:20px;">
@@ -106,19 +87,6 @@
               <i class="fas fa-sync"></i> Increment All Versions
             </button>
             <div id="cacheStatus" style="margin-top:16px;"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3><i class="fas fa-exclamation-circle"></i> Maintenance Mode</h3>
-          </div>
-          <div style="padding:20px;">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <input type="checkbox" id="maintenanceToggle" onchange="toggleMaintenance()" style="width:20px;height:20px;cursor:pointer;" />
-              <label for="maintenanceToggle" style="cursor:pointer;margin:0;">Enable Maintenance Mode</label>
-            </div>
-            <p style="color:var(--text-light);font-size:0.85rem;margin-top:8px;">When enabled, site shows maintenance page to visitors</p>
           </div>
         </div>
       </main>
@@ -162,9 +130,6 @@
       }
     }
 
-    function toggleMaintenance() {
-      showToast('Maintenance mode settings updated', 'info');
-    }
   </script>
 </body>
 </html>
