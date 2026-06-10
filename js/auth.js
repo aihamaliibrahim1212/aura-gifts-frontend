@@ -198,7 +198,20 @@ function showAuthDropdown() {
 
     var dropdown = document.createElement('div');
     dropdown.id = 'auth-dropdown';
-    dropdown.style.cssText = 'position:fixed;top:90px;right:90px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
+
+    // Responsive positioning: adjust for mobile/tablet
+    var topVal = 90, rightVal = 90;
+    if (window.innerWidth < 768) {
+        // Mobile: position below header, more centered
+        topVal = 65;
+        rightVal = 16;
+    } else if (window.innerWidth < 1024) {
+        // Tablet: slight adjustment
+        topVal = 85;
+        rightVal = 50;
+    }
+
+    dropdown.style.cssText = 'position:fixed;top:' + topVal + 'px;right:' + rightVal + 'px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
 
     // User header
     var header = document.createElement('div');
