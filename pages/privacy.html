@@ -12,8 +12,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css?v=22">
-    <link rel="stylesheet" href="../css/auth.css?v=14"><style>html,body{background:#fff;}</style>
+    <link rel="stylesheet" href="../css/style.css?v=23">
+    <link rel="stylesheet" href="../css/auth.css?v=15"><style>html,body{background:#fff;}</style>
     <script>
         // Blocking pre-render: inject cached content before first paint — zero flash
         try {
@@ -66,7 +66,7 @@
             border-bottom: 1px solid var(--border-gray);
         }
     </style>
-    <script src="../js/auth.js?v=12" defer></script>
+    <script src="../js/auth.js?v=13" defer></script>
 </head>
 <body>
 
@@ -176,7 +176,7 @@
         </div>
     </footer>
 
-    <script src="../js/api-cache.js?v=21"></script>
+    <script src="../js/api-cache.js?v=22"></script>
     <script>
         fetchCached('/api/content/privacy_policy', 'privacy', (data) => {
             const el = document.getElementById('privacy-content');
@@ -191,7 +191,7 @@
             document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
         });
     </script>
-    <script src="../js/cart.js?v=20"></script>
+    <script src="../js/cart.js?v=21"></script>
 
     <script>
         function toggleMobileMenu() {
