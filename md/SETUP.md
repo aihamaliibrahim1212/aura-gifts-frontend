@@ -29,6 +29,22 @@ composer install
 cp backend/.env.example backend/.env
 ```
 
+**Check `.env` file has these values (should be pre-configured):**
+```
+APP_NAME="Aura Gifts"
+APP_ENV=local
+APP_DEBUG=false
+APP_URL=http://localhost:8000
+
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=auragifts
+DB_USERNAME=root
+DB_PASSWORD=                    # Leave empty if no password
+```
+
+If using different MySQL credentials, update them in `.env`.
+
 #### 4. Generate Laravel Key
 ```bash
 php backend/artisan key:generate
