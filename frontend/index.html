@@ -377,7 +377,8 @@
     <script src="js/main.js?v=30"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(function() {});
+            const swPath = window.location.pathname.includes('/aura-gifts-frontend/') ? '/aura-gifts-frontend/sw.js' : '/sw.js';
+            navigator.serviceWorker.register(swPath).catch(function() {});
         }
     </script>
     <script src="js/cart.js?v=30"></script>
