@@ -22,7 +22,7 @@ function serveFile(string $path, bool $noCache = false): BinaryFileResponse
 
 Route::get('/', function() use ($siteDir) {
     // SSR: inline critical data directly into the HTML for zero-delay first paint
-    $html = file_get_contents($siteDir . '/index.html');
+    $html = file_get_contents($siteDir . '/frontend/index.html');
 
     // Fetch banners and featured products from DB (cached for 60s to reduce response time)
     $banners  = \Illuminate\Support\Facades\Cache::remember('ssr_banners', 60, fn() =>
@@ -178,10 +178,10 @@ Route::get('/', function() use ($siteDir) {
         ->header('Cache-Control', 'public, max-age=30, stale-while-revalidate=60');
 });
 Route::get('/index.html', fn() => redirect('/'));
-Route::get('/404', fn() => serveFile($siteDir . '/404.html'));
+Route::get('/404', fn() => serveFile($siteDir . '/frontend/404.html'));
 
 Route::get('/pages/{file}', function (string $file) use ($siteDir) {
-    $path = $siteDir . '/pages/' . basename($file);
+    $path = $siteDir . '/frontend/pages/' . basename($file);
     if (!file_exists($path)) abort(404);
 
     // SSR for content pages — inject DB content directly to eliminate flash
@@ -375,7 +375,7 @@ Route::get('/sw.js', function () use ($siteDir) {
 
 Route::get('/css/{file}', function (string $file) use ($siteDir) {
     $file = strtok($file, '?');
-    $path = $siteDir . '/css/' . basename($file);
+    $path = $siteDir . '/frontend/css/' . basename($file);
     if (!file_exists($path)) abort(404);
     $etag    = '"' . md5_file($path) . '"';
     $lastMod = gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
@@ -396,7 +396,7 @@ Route::get('/css/{file}', function (string $file) use ($siteDir) {
 
 Route::get('/js/{file}', function (string $file) use ($siteDir) {
     $file = strtok($file, '?');
-    $path = $siteDir . '/js/' . basename($file);
+    $path = $siteDir . '/frontend/js/' . basename($file);
     if (!file_exists($path)) abort(404);
     $etag    = '"' . md5_file($path) . '"';
     $lastMod = gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
