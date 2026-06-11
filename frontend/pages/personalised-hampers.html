@@ -202,17 +202,5 @@
             document.getElementById('hamburger').classList.remove('open');
             document.body.style.overflow = '';
         }
-    </script>    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
-    <script>
-    function openAuthModal() {
-        document.getElementById('auth-modal').style.display = 'flex';
-    }
-    function closeAuthModal() {
-        document.getElementById('auth-modal').style.display = 'none';
-    }
-    document.getElementById('auth-modal')?.addEventListener('click', function(e) {
-        if (e.target === this) closeAuthModal();
-    });
-    </script>
     </body>
 </html>
