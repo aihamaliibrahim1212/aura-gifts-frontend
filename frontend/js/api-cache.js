@@ -3,7 +3,7 @@
  * Simple API fetching with localStorage caching (stale-while-revalidate).
  */
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://paparazzi-freckled-treadmill.ngrok-free.dev';
 
 // ── Service Worker — caches only CSS/JS to eliminate refresh flash ────────────
 if ('serviceWorker' in navigator) {
