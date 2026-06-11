@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#ffffff;">
+<head>
+    <style>*{box-sizing:border-box;margin:0;padding:0}html{background:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;color:#1a1a1a;overflow-x:hidden}body{background:#fff;overflow-x:hidden}</style>
+    <meta charset="UTF-8"><meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Aura Gifts</title>
+    <meta name="description" content="The story behind Aura Gifts. Luxury, thoughtful, and personal hampers crafted in the Maldives.">
+    <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css?v=32">
+    <link rel="stylesheet" href="../css/auth.css?v=24"><style>html,body{background:#fff;}</style>
+    <style>
+        .about-hero {
+            background: var(--off-white);
+            border-bottom: 1px solid var(--border-gray);
+            padding: 56px 0 44px;
+            text-align: center;
+            margin-top: var(--header-h);
+        }
+        .about-hero p {
+            color: var(--text-mid); font-size: 1.05rem;
+            max-width: 520px; margin: 12px auto 0;
+        }
+        .about-section { padding: 72px 0; background: var(--white); }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .about-text h2 { margin-bottom: 16px; }
+        .about-text p {
+            color: var(--text-mid); font-size: 0.95rem;
+            line-height: 1.8; margin-bottom: 14px;
+        }
+        .about-logo-wrap {
+            display: flex; justify-content: center; align-items: center;
+            background: var(--gold-pale); border-radius: 20px;
+            padding: 48px; aspect-ratio: 1;
+        }
+        .about-logo-wrap img {
+            width: 160px; height: 160px;
+            border-radius: 50%; object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            max-width: 960px;
+            margin: 40px auto 0;
+        }
+        .value-card {
+            padding: 28px 24px;
+            border: 1.5px solid var(--border-gray);
+            border-radius: 14px;
+            background: var(--white);
+            text-align: center;
+        }
+        .value-icon {
+            font-size: 1.6rem; color: var(--gold-dark);
+            margin-bottom: 14px;
+        }
+        .value-title { font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+        .value-desc { font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+        .about-cta {
+            background: var(--gold-pale);
+            border-top: 1px solid var(--loading-dark);
+            text-align: center;
+            padding: 64px 0;
+        }
+        .about-cta h2 { margin-bottom: 12px; }
+        .about-cta p { color: var(--text-mid); max-width: 460px; margin: 0 auto 28px; }
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; gap: 32px; }
+            .about-logo-wrap { padding: 32px; }
+        }
+    </style>
+    <script src="../js/auth.js?v=22" defer></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <div class="top-bar" id="top-bar-text">FOR QUERIES PLEASE CALL 9992070</div>
+        <div class="header-search-bar">
+            <a href="../index.html" class="logo">
+                <img src="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717076/aura-gifts/logos/tdpoqlfhze5zkuvdppgw.jpg" alt="Aura Gifts" class="logo-wide" id="site-logo-wide">
+            </a>
+            <div class="header-search-wrap">
+                <i class="fas fa-search header-search-icon"></i>
+                <input type="text" id="hamper-search" placeholder="Search hampers..." autocomplete="off">
+            </div>
+            <div class="header-right">
+                <button id="auth-nav-btn" class="auth-header-btn" style="background:none;border:none;cursor:pointer;padding:0px;margin:0px;display:flex;align-items:center;gap:8px;margin-right:-40px;"><i class="fas fa-user" style="font-size:1rem;color:#787878;"></i></button>
+                <button class="cart-btn" onclick="toggleCart()">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span class="cart-count"></span>
+                </button>
+                <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <nav class="navbar" id="desktop-nav">
+                <div class="nav-links">
+                    <a href="hampers.html">Instant Hampers</a>
+                    <a href="personalised-hampers.html">Personalised Hampers</a>
+                    <a href="create-your-own.html">Create Your Own</a>
+                    <a href="corporate-orders.html">Corporate Orders</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <nav>
+            <a href="hampers.html" onclick="closeMobileMenu()">Instant Hampers</a>
+            <a href="personalised-hampers.html" onclick="closeMobileMenu()">Personalised Hampers</a>
+            <a href="create-your-own.html" onclick="closeMobileMenu()">Create Your Own</a>
+            <a href="corporate-orders.html" onclick="closeMobileMenu()">Corporate Orders</a>
+            <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
+            <a href="mailto:aura.gifts.mv@gmail.com">Contact Us</a>
+        </nav>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px;">
+        <div style="background:#fff;border-radius:16px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center;position:relative;">
+            <button onclick="closeAuthModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#ccc;transition:color 0.2s;width:32px;height:32px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.color='#999'" onmouseout="this.style.color='#ccc'"><i class="fas fa-times"></i></button>
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:4px;color:#1a1a1a;letter-spacing:0.3px;">Welcome</h2>
+            <p style="font-size:0.85rem;color:#999;margin-bottom:24px;line-height:1.5;">Sign in to your account or create a new one</p>
+            <a href="login.html" style="display:block;width:100%;padding:13px 14px;background:#b8a898;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:background 0.2s;text-align:center;">Sign In</a>
+            <a href="register.html" style="display:block;width:100%;padding:13px 14px;background:none;border:1.5px solid #e0d8cc;color:#b8a898;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='#b8a898';this.style.background='#faf8f5'" onmouseout="this.style.borderColor='#e0d8cc';this.style.background='none'">Create Account</a>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="about-hero">
+        <div class="container">
+            <span class="section-label">Our Story</span>
+            <h1 style="font-size:2.6rem;margin-top:10px;">About Aura Gifts</h1>
+            <p id="about-hero-subtitle">Where every gift is crafted with intention, presented with elegance, and felt long after it is given.</p>
+        </div>
+    </div>
+
+    <!-- Story Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-grid" style="grid-template-columns:1fr;">
+                <div class="about-text">
+                    <span class="section-label" id="about-who-label">Who We Are</span>
+                    <h2 id="about-section-title">The Art of Refined Gifting</h2>
+                    <p id="about-p1">Aura Gifts was born from a simple belief, that a truly great gift should feel personal, look beautiful, and leave a lasting impression. Based in the Maldives, we specialise in luxury hampers that are thoughtfully curated and beautifully presented.</p>
+                    <p id="about-p2">Every hamper we create tells a story. From the items we select to the way we wrap and present them, every detail is handled with care. Whether it is for a birthday, a wedding, a corporate client, or just because, we believe the act of giving deserves to feel as special as the occasion itself.</p>
+                    <p id="about-p3">We work with individuals and businesses alike, offering instant hampers, personalised orders, build-your-own options, and large-scale corporate gifting. No matter the size of the order, our standard never changes.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="about-cta">
+        <div class="container">
+            <h2 id="about-cta-title">Ready to Send Something Special?</h2>
+            <p id="about-cta-subtitle">Browse our collection or reach out for a personalised or corporate order.</p>
+            <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+                <a href="hampers.html" class="btn btn-gold btn-lg">
+                    <i class="fas fa-gift"></i> Browse Hampers
+                </a>
+                <a href="mailto:aura.gifts.mv@gmail.com" class="btn btn-outline btn-lg">
+                    <i class="fas fa-envelope"></i> Get in Touch
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">
+                        <span style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;">
+                            <span style="font-weight:800;color:white;">aura</span><span style="font-weight:400;color:rgba(255,255,255,0.7);">gifts</span>
+                        </span>
+                    </a>
+                    <p style="margin-top:14px;">Art of refined gifting. Luxury, thoughtful, and deeply personal gifts for every occasion. Corporate orders welcome.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/auragifts.mv/" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="hampers.html">All Hampers</a></li>
+                        <li><a href="hampers.html">Instant Hampers</a></li>
+                        <li><a href="personalised-hampers.html">Personalised Hampers</a></li>
+                        <li><a href="create-your-own.html">Create Your Own</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="mailto:aura.gifts.mv@gmail.com">aura.gifts.mv@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="justify-content:center;">
+                <p>&copy; 2025 Aura Gifts. Art of refined gifting.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/api-cache.js?v=31"></script>
+    <script>
+        function goSearch(q) { window.location.href = 'search.html?q=' + q; }
+        const input = document.getElementById('hamper-search');
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') { const q = input.value.trim(); if (q) goSearch(encodeURIComponent(q)); } });
+        window.addEventListener('scroll', () => { document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60); });
+
+        // Content is injected server-side via SSR — no fetch needed
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+            document.getElementById('mobile-menu-overlay').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('open');
+            document.body.style.overflow = document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('mobile-menu-overlay').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    </script>
+    <script src="../js/cart.js?v=30"></script>
+    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}</script>
+    <script>
+    function openAuthModal() {
+        document.getElementById('auth-modal').style.display = 'flex';
+    }
+    function closeAuthModal() {
+        document.getElementById('auth-modal').style.display = 'none';
+    }
+    document.getElementById('auth-modal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeAuthModal();
+    });
+    </script></body>
+</html>
