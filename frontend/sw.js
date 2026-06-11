@@ -1,26 +1,83 @@
-// Service Worker - caches CSS/JS only
+/**
+ * Aura Gifts Service Worker
+ * Caches HTML, CSS, JS and fonts for instant page loads with no flicker.
+ * HTML: stale-while-revalidate (serve cached instantly, update in background)
+ * Assets: cache-first (CSS/JS/fonts never change without version bump)
+ */
+
+const CACHE_NAME = 'aura-v7';
+
 self.addEventListener('install', function(event) {
-  self.skipWaiting();
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', function(event) {
-  event.waitUntil(clients.claim());
+    event.waitUntil(
+        caches.keys().then(function(keys) {
+            return Promise.all(
+                keys.filter(function(k) { return k !== CACHE_NAME; })
+                    .map(function(k) { return caches.delete(k); })
+            );
+        }).then(function() { return self.clients.claim(); })
+    );
 });
 
 self.addEventListener('fetch', function(event) {
-  // Only cache CSS and JS files
-  if (!event.request.url.includes('.css') && !event.request.url.includes('.js')) {
-    return;
-  }
+    var req = event.request;
+    var url = req.url;
 
-  event.respondWith(
-    caches.open('aura-v1').then(function(cache) {
-      return cache.match(event.request).then(function(response) {
-        return response || fetch(event.request).then(function(response) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-  );
+    if (req.method !== 'GET') return;
+
+    // Skip API calls — always fresh
+    if (url.includes('/api/')) return;
+
+    // Skip admin panel
+    if (url.includes('/admin')) return;
+
+    var isHtml = req.headers.get('accept') && req.headers.get('accept').includes('text/html');
+    var isCss  = url.includes('.css');
+    var isJs   = url.includes('.js');
+    var isCdn  = url.includes('cdnjs.cloudflare.com') || url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com');
+    // Don't cache Cloudinary images — let them load normally
+    var isImg  = false;
+
+    if (isHtml) {
+        // Network-first for HTML: always fetch fresh, fall back to cache if offline
+        event.respondWith(
+            fetch(req).then(function(response) {
+                if (response && response.status === 200) {
+                    var responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(function(cache) {
+                        cache.put(req, responseToCache);
+                    });
+                }
+                return response;
+            }).catch(function() {
+                // Offline fallback — serve cached version if available
+                return caches.open(CACHE_NAME).then(function(cache) {
+                    return cache.match(req).then(function(cached) {
+                        return cached || new Response('', {status: 503});
+                    });
+                });
+            })
+        );
+        return;
+    }
+
+    if (isCss || isJs || isCdn) {
+        // Cache-first for assets
+        event.respondWith(
+            caches.open(CACHE_NAME).then(function(cache) {
+                return cache.match(req).then(function(cached) {
+                    if (cached) return cached;
+                    return fetch(req).then(function(response) {
+                        if (response && response.status === 200) {
+                            cache.put(req, response.clone());
+                        }
+                        return response;
+                    }).catch(function() { return new Response('', {status: 503}); });
+                });
+            })
+        );
+    }
 });
