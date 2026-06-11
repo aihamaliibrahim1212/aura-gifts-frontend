@@ -7,11 +7,12 @@ Laravel 13 / PHP 8.3 REST API powering the Aura Gifts storefront.
 ## Setup
 
 ```bash
+cd backend
+
 composer install
 cp .env.example .env
 php artisan key:generate
-php artisan migrate --force
-php artisan db:seed
+php artisan migrate --seed
 php artisan serve
 ```
 
@@ -84,20 +85,3 @@ Key variables to configure in `.env`:
 - Email enumeration prevention on forgot-password endpoint
 
 ---
-
-## Mail (Password Reset & Email Verification)
-
-Configure your SMTP provider in `.env`:
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.yourprovider.com
-MAIL_PORT=587
-MAIL_USERNAME=your_username
-MAIL_PASSWORD=your_password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@aura.gifts"
-MAIL_FROM_NAME="Aura Gifts"
-```
-
-Recommended providers: [Resend](https://resend.com), [Mailgun](https://mailgun.com), [Postmark](https://postmarkapp.com).
