@@ -33,7 +33,6 @@ RateLimiter::for('orders', function (Request $request) {
 });
 
 // ── Public routes ──────────────────────────────────────────────────────────
-Route::get('/status',               [PublicController::class, 'status']);
 Route::get('/products/featured',    [PublicController::class, 'featuredProducts']);
 Route::get('/products',             [PublicController::class, 'products']);
 Route::get('/products/{id}',        [PublicController::class, 'product']);
@@ -51,9 +50,6 @@ Route::get('/auth/me',      [AdminController::class, 'me']);
 // ── Admin routes (protected by user token with admin/superadmin role) ─────
 Route::middleware('user.admin.auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
-
-    // Maintenance
-    Route::post('/maintenance',      [AdminController::class, 'setMaintenance']);
 
     // Cache
     Route::post('/increment-cache-versions', [CacheController::class, 'incrementVersions']);

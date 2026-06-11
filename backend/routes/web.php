@@ -179,7 +179,6 @@ Route::get('/', function() use ($siteDir) {
 });
 Route::get('/index.html', fn() => redirect('/'));
 Route::get('/404', fn() => serveFile($siteDir . '/404.html'));
-Route::get('/maintenance.html', fn() => serveFile($siteDir . '/maintenance.html'));
 
 Route::get('/pages/{file}', function (string $file) use ($siteDir) {
     $path = $siteDir . '/pages/' . basename($file);

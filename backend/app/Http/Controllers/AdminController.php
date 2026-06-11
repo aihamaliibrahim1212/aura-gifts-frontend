@@ -116,23 +116,6 @@ class AdminController extends Controller
         return $this->ok($user->toApiArray());
     }
 
-    // ── Maintenance Mode ───────────────────────────────────────────────────
-
-    public function setMaintenance(Request $request)
-    {
-        $requester = $this->currentUser();
-        if (!$requester || $requester->role !== 'superadmin') {
-            return $this->err('Superadmin access required', 403);
-        }
-        $data = $request->json()->all();
-        $enabled = isset($data['enabled']) ? ($data['enabled'] ? '1' : '0') : '0';
-        SiteContent::updateOrCreate(
-            ['key' => 'maintenance_mode'],
-            ['value' => $enabled, 'content_type' => 'text']
-        );
-        return $this->ok(['maintenance' => $enabled === '1']);
-    }
-
     // ── Dashboard ─────────────────────────────────────────────────────────
 
     public function dashboard()

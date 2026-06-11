@@ -22,13 +22,6 @@ class PublicController extends Controller
         return response()->json(['success' => false, 'error' => $msg], $status);
     }
 
-    // GET /api/status
-    public function status()
-    {
-        $maintenance = SiteContent::where('key', 'maintenance_mode')->first();
-        return $this->ok(['maintenance' => $maintenance && $maintenance->value === '1']);
-    }
-
     // GET /api/products/featured
     public function featuredProducts()
     {
