@@ -331,6 +331,8 @@ body.auth-ready { visibility: visible; }
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
@@ -340,6 +342,11 @@ body.auth-ready { visibility: visible; }
   padding: 16px 20px;
   border-bottom: 1px solid var(--light-gray);
   background: var(--off-white);
+}
+
+.card > .table {
+  overflow: auto;
+  max-height: 70vh;
 }
 
 .card-header h3 {
@@ -355,6 +362,7 @@ body.auth-ready { visibility: visible; }
   width: 100%;
   border-collapse: collapse;
   font-size: 0.865rem;
+  min-width: 700px;
 }
 
 .table th {
@@ -367,6 +375,9 @@ body.auth-ready { visibility: visible; }
   color: var(--text-light);
   border-bottom: 1.5px solid var(--border-gray);
   background: var(--off-white);
+  position: sticky;
+  top: 0;
+  z-index: 9;
 }
 
 .table td {

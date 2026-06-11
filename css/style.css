@@ -898,3 +898,26 @@ footer { background: #787878; color: rgba(255,255,255,0.85); padding: 60px 0 28p
 }
 
 /* ─── Page fade-in on load ───────────────────────────────────────── */
+/* ─── Account Header Sticky ──────────────────────────────────────── */
+.account-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 100;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-gray);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+@media (max-width: 768px) {
+    .account-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .acct-btns {
+        margin-left: 0 !important;
+    }
+}

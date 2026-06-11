@@ -151,9 +151,19 @@ function authUpdateNav() {
                     showAuthDropdown();
                 }
             };
-        } else if (typeof openAuthModal !== 'undefined') {
-            // When logged out, open modal
-            btn.onclick = openAuthModal;
+        } else {
+            // When logged out, show auth dropdown with Sign In/Create Account
+            btn.style.cursor = 'pointer';
+            btn.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var dropdown = document.getElementById('auth-dropdown');
+                if (dropdown) {
+                    dropdown.remove();
+                } else {
+                    showAuthDropdownGuest();
+                }
+            };
         }
     }
 
@@ -199,23 +209,18 @@ function showAuthDropdown() {
     var dropdown = document.createElement('div');
     dropdown.id = 'auth-dropdown';
 
-    // Smooth responsive positioning based on viewport width
+    // Hardcoded positioning for PC and mobile
     var width = window.innerWidth;
     var topVal, rightVal;
 
-    if (width >= 1024) {
-        // Desktop
+    if (width >= 768) {
+        // Desktop/PC
         topVal = 90;
-        rightVal = 90;
-    } else if (width < 768) {
-        // Mobile
-        topVal = 100;
-        rightVal = 16;
+        rightVal = 20;
     } else {
-        // Tablet: smooth interpolation between desktop and mobile
-        var ratio = (width - 768) / (1024 - 768);
-        topVal = Math.round(100 - (10 * ratio));
-        rightVal = Math.round(16 + (74 * ratio));
+        // Mobile
+        topVal = 80;
+        rightVal = 16;
     }
 
     dropdown.style.cssText = 'position:fixed;top:' + topVal + 'px;right:' + rightVal + 'px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
@@ -265,12 +270,44 @@ function showAuthDropdown() {
 
     dropdown.appendChild(accountLink);
     dropdown.appendChild(logoutLink);
+
+    // Admin panel link (only for admins/superadmins)
+    if (user && (user.role === 'admin' || user.role === 'superadmin')) {
+        var adminLink = document.createElement('a');
+        adminLink.href = '/admin/dashboard.html';
+        adminLink.style.cssText = 'display:block;padding:12px 14px;color:#1a1a1a;text-decoration:none;font-size:0.9rem;border-top:1px solid #f0f0f0;transition:background 0.2s;';
+        adminLink.innerHTML = '<i class="fas fa-cog" style="margin-right:8px;color:#b8a898;width:16px;"></i>Admin Panel';
+        adminLink.onmouseover = function() { this.style.background = '#f5f1eb'; };
+        adminLink.onmouseout = function() { this.style.background = 'none'; };
+        dropdown.appendChild(adminLink);
+    }
+
     document.body.appendChild(dropdown);
 
     // Close dropdown when clicking elsewhere
     setTimeout(function() {
         document.addEventListener('click', closeDropdown, { once: true });
     }, 0);
+
+    // Update dropdown position on window resize
+    window.addEventListener('resize', function() {
+        var dropdown = document.getElementById('auth-dropdown');
+        if (dropdown) {
+            var newWidth = window.innerWidth;
+            var newTopVal, newRightVal;
+
+            if (newWidth >= 768) {
+                newTopVal = 90;
+                newRightVal = 20;
+            } else {
+                newTopVal = 80;
+                newRightVal = 16;
+            }
+
+            dropdown.style.top = newTopVal + 'px';
+            dropdown.style.right = newRightVal + 'px';
+        }
+    });
 }
 
 function closeDropdown(e) {
@@ -278,6 +315,76 @@ function closeDropdown(e) {
     if (dropdown && !dropdown.contains(e.target) && !document.getElementById('auth-nav-btn').contains(e.target)) {
         dropdown.remove();
     }
+}
+
+function showAuthDropdownGuest() {
+    var isInPages = window.location.pathname.includes('/pages/');
+    var signInHref = isInPages ? 'login.html' : 'pages/login.html';
+    var signUpHref = isInPages ? 'register.html' : 'pages/register.html';
+
+    var dropdown = document.createElement('div');
+    dropdown.id = 'auth-dropdown';
+
+    // Hardcoded positioning for PC and mobile
+    var width = window.innerWidth;
+    var topVal, rightVal;
+
+    if (width >= 768) {
+        // Desktop/PC
+        topVal = 90;
+        rightVal = 20;
+    } else {
+        // Mobile
+        topVal = 80;
+        rightVal = 16;
+    }
+
+    dropdown.style.cssText = 'position:fixed;top:' + topVal + 'px;right:' + rightVal + 'px;background:#fff;border:1.5px solid #e0d8cc;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9999;min-width:220px;overflow:hidden;';
+
+    // Sign In link
+    var signInLink = document.createElement('a');
+    signInLink.href = signInHref;
+    signInLink.style.cssText = 'display:block;padding:12px 14px;color:#1a1a1a;text-decoration:none;font-size:0.9rem;border-bottom:1px solid #f0f0f0;transition:background 0.2s;';
+    signInLink.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right:8px;color:#b8a898;width:16px;"></i>Sign In';
+    signInLink.onmouseover = function() { this.style.background = '#f5f1eb'; };
+    signInLink.onmouseout = function() { this.style.background = 'none'; };
+
+    // Create Account link
+    var signUpLink = document.createElement('a');
+    signUpLink.href = signUpHref;
+    signUpLink.style.cssText = 'display:block;padding:12px 14px;color:#1a1a1a;text-decoration:none;font-size:0.9rem;transition:background 0.2s;';
+    signUpLink.innerHTML = '<i class="fas fa-user-plus" style="margin-right:8px;color:#b8a898;width:16px;"></i>Create Account';
+    signUpLink.onmouseover = function() { this.style.background = '#f5f1eb'; };
+    signUpLink.onmouseout = function() { this.style.background = 'none'; };
+
+    dropdown.appendChild(signInLink);
+    dropdown.appendChild(signUpLink);
+    document.body.appendChild(dropdown);
+
+    // Close dropdown when clicking elsewhere
+    setTimeout(function() {
+        document.addEventListener('click', closeDropdown, { once: true });
+    }, 0);
+
+    // Update dropdown position on window resize
+    window.addEventListener('resize', function() {
+        var dropdown = document.getElementById('auth-dropdown');
+        if (dropdown) {
+            var newWidth = window.innerWidth;
+            var newTopVal, newRightVal;
+
+            if (newWidth >= 768) {
+                newTopVal = 90;
+                newRightVal = 20;
+            } else {
+                newTopVal = 80;
+                newRightVal = 16;
+            }
+
+            dropdown.style.top = newTopVal + 'px';
+            dropdown.style.right = newRightVal + 'px';
+        }
+    });
 }
 
 // ─── Path helpers ─────────────────────────────────────────────────────────────

@@ -109,7 +109,20 @@ class PublicController extends Controller
 
         $total = 0;
         foreach ($items as $item) {
-            $total += (float)($item['qty'] ?? 1) * (float)($item['price'] ?? 0);
+            $qty = (float)($item['quantity'] ?? $item['qty'] ?? 1);
+            $price = (float)($item['price'] ?? 0);
+
+            if ($qty <= 0) return $this->err('Item quantity must be positive');
+            if ($price < 0) return $this->err('Item price cannot be negative');
+
+            $total += $qty * $price;
+        }
+
+        $calculatedTotal = round($total, 2);
+        $submittedTotal = isset($data['total_mvr']) ? round((float)$data['total_mvr'], 2) : $calculatedTotal;
+
+        if (abs($submittedTotal - $calculatedTotal) > 0.01) {
+            return $this->err('Price mismatch: submitted total does not match calculated total');
         }
 
         // Optionally link this order to a logged-in customer account
@@ -135,7 +148,7 @@ class PublicController extends Controller
             'boat_name'      => $data['boat_name'] ?? '',
             'boat_number'    => $data['boat_number'] ?? '',
             'items'          => $items,
-            'total_mvr'      => round($total, 2),
+            'total_mvr'      => $calculatedTotal,
             'status'         => 'pending',
             'notes'          => $data['notes'] ?? '',
         ]);

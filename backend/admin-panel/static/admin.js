@@ -48,9 +48,18 @@ function requireAuth() {
   if (nameEl) {
     var full = (user.name || user.email) + ' (' + user.role + ')';
     nameEl.textContent = full;
-    nameEl.title = full;
   }
+
+  // Listen for logout in other tabs
+  window.addEventListener('storage', function(e) {
+    if (e.key === TOKEN_KEY || e.key === USER_KEY) {
+      if (!getToken() || !getStoredUser()) {
+        window.location.href = '/pages/login.html';
+      }
+    }
+  });
 }
+
 
 // ── Logout ───────────────────────────────────────────────────
 

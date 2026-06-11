@@ -6,14 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aura Admin · Users</title>
   <style>html,body{background:#f8f8f6;}</style>
-  <link rel="stylesheet" href="/admin/static/admin.css?v=19" />
+  <link rel="stylesheet" href="/admin/static/admin.css?v=23" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
-        <a href="http://localhost:8000" target="_blank" style="text-decoration:none;font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;font-size:1.9rem;display:block;text-align:center;width:100%;"><span style="font-weight:800;color:#9a9a9a;">aura</span><span style="font-weight:400;color:#9a9a9a;">gifts</span></a>
+        <a href="http://localhost:8000" style="text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;min-height:60px;">
+          <img id="admin-logo-dark" src="" alt="Aura Gifts" style="height:40px;width:auto;display:none;">
+          <span id="admin-logo-text" style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;font-size:1.9rem;"><span style="font-weight:800;color:#9a9a9a;">aura</span><span style="font-weight:400;color:#9a9a9a;">gifts</span></span>
+        </a>
       </div>
       <nav class="sidebar-nav">
         <a href="/admin/dashboard.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
@@ -61,8 +64,9 @@
         <div class="card" id="usersCard" style="display:none;">
           <div class="card-header">
             <h3>Customer Accounts</h3>
-            <span style="font-size:0.8rem;color:var(--text-light);font-weight:400;">Grant or revoke admin access for any account.</span>
+            <span style="font-size:0.8rem;color:var(--text-light);font-weight:400;">Click a user to view details, manage role, or delete account.</span>
           </div>
+          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
           <table class="table users-table">
             <thead>
               <tr>
@@ -79,6 +83,7 @@
               <tr><td colspan="7" class="text-center text-muted">Loading…</td></tr>
             </tbody>
           </table>
+          </div>
         </div>
 
       </main>
@@ -94,6 +99,8 @@
       </div>
       <div class="modal-body" id="userDetailBody"></div>
       <div class="modal-footer">
+        <button class="btn btn-danger" onclick="deleteUser()" style="margin-right:auto;">Delete User</button>
+        <button class="btn btn-primary" id="changeRoleBtn" style="display:none;" onclick="openChangeRoleFromModal()">Change Role</button>
         <button class="btn btn-outline" onclick="closeUserDetail()">Close</button>
       </div>
     </div>
@@ -112,8 +119,8 @@
         <div class="form-group" style="margin:0;">
           <label>Role</label>
           <select id="roleSelect" class="form-control">
-            <option value="customer">Customer (no admin access)</option>
-            <option value="superadmin">Superadmin (full access + user management)</option>
+            <option value="customer">Customer</option>
+            <option value="superadmin">Superadmin</option>
           </select>
         </div>
       </div>
@@ -125,7 +132,7 @@
   </div>
 
   <div id="toast" class="toast"></div>
-  <script src="/admin/static/admin.js?v=11"></script>
+  <script src="/admin/static/admin.js?v=15"></script>
   <script>window.scrollTo(0, 0);</script>
   <script>
     requireAuth();
@@ -140,6 +147,9 @@
     }
 
     let allUsers = [];
+    let currentUserDetailId = null;
+    let currentUserDetailRole = null;
+    let currentUserDetailName = null;
 
     async function loadUsers() {
       try {
@@ -153,6 +163,9 @@
     function openUserDetail(id) {
       const u = allUsers.find(x => x.id === id);
       if (!u) return;
+      currentUserDetailId = id;
+      currentUserDetailRole = u.role;
+      currentUserDetailName = u.name;
 
       function row(label, value) {
         if (!value) return '';
@@ -186,11 +199,43 @@
         </div>
         ${!u.phone && !u.island ? '<p style="margin-top:16px;font-size:0.82rem;color:#b0b0b0;text-align:center;">No delivery details saved yet.</p>' : ''}
       `;
+
+      const changeRoleBtn = document.getElementById('changeRoleBtn');
+      if (me && u.id === me.id) {
+        changeRoleBtn.style.display = 'none';
+      } else {
+        changeRoleBtn.style.display = 'block';
+      }
+
       document.getElementById('userDetailModal').classList.add('open');
     }
 
     function closeUserDetail() {
       document.getElementById('userDetailModal').classList.remove('open');
+      currentUserDetailId = null;
+      currentUserDetailRole = null;
+      currentUserDetailName = null;
+    }
+
+    function openChangeRoleFromModal() {
+      if (currentUserDetailId && currentUserDetailName && currentUserDetailRole) {
+        openRoleModal(currentUserDetailId, currentUserDetailName, currentUserDetailRole);
+      }
+    }
+
+    async function deleteUser() {
+      if (!currentUserDetailId) return;
+      const u = allUsers.find(x => x.id === currentUserDetailId);
+      if (!u) return;
+      if (!confirm(`Delete user "${escHtml(u.name)}" and all their data? This cannot be undone.`)) return;
+      try {
+        await api(`/api/admin/users/${currentUserDetailId}`, 'DELETE');
+        showToast('User deleted', 'success');
+        closeUserDetail();
+        loadUsers();
+      } catch(e) {
+        showToast(e.message || 'Failed to delete user', 'error');
+      }
     }
 
     function renderUsers(users) {

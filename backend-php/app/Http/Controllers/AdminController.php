@@ -119,6 +119,10 @@ class AdminController extends Controller
 
     public function setMaintenance(Request $request)
     {
+        $requester = $this->currentUser();
+        if (!$requester || $requester->role !== 'superadmin') {
+            return $this->err('Superadmin access required', 403);
+        }
         $data = $request->json()->all();
         $enabled = isset($data['enabled']) ? ($data['enabled'] ? '1' : '0') : '0';
         SiteContent::updateOrCreate(
@@ -136,9 +140,9 @@ class AdminController extends Controller
         $totalOrders    = Order::count();
         $pendingOrders  = Order::where('status', 'pending')->count();
         $totalRevenue   = Order::where('status', 'delivered')->sum('total_mvr');
-        $lowStock       = Product::where('is_active', true)->where('stock', '<=', 3)->get();
-        $recentOrders   = Order::orderByDesc('created_at')->limit(5)->get();
-        $recentReviews  = Review::orderByDesc('created_at')->limit(5)->get();
+        $lowStock       = Product::where('is_active', true)->where('stock', '<=', 3)->orderByDesc('stock')->get();
+        $recentOrders   = Order::latest('created_at')->limit(5)->get();
+        $recentReviews  = Review::latest('created_at')->limit(5)->get();
 
         return $this->ok([
             'total_products'    => $totalProducts,
@@ -247,12 +251,21 @@ class AdminController extends Controller
         if (!$product) return $this->err('Product not found', 404);
         if (!$request->hasFile('image')) return $this->err('No image file provided');
 
+        $file = $request->file('image');
+        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!in_array($file->getMimeType(), $allowed)) {
+            return $this->err('Only JPEG, PNG, WebP, and GIF images are allowed');
+        }
+        if ($file->getSize() > 10 * 1024 * 1024) {
+            return $this->err('Image must be smaller than 10MB');
+        }
+
         if ($product->cloudinary_public_id) {
             try { $this->cloudinary()->uploadApi()->destroy($product->cloudinary_public_id); } catch (\Exception $e) {}
         }
         try {
             $result = $this->cloudinary()->uploadApi()->upload(
-                $request->file('image')->getRealPath(),
+                $file->getRealPath(),
                 ['folder' => 'aura-gifts/products']
             );
             $product->image_url = $result['secure_url'];
@@ -336,11 +349,11 @@ class AdminController extends Controller
             // Marking as delivered: deduct stock for each item
             if ($newStatus === 'delivered' && $oldStatus !== 'delivered') {
                 foreach (($order->items ?? []) as $item) {
-                    $name = substr((string)($item['name'] ?? ''), 0, 255);
-                    if (!$name) continue;
-                    $product = Product::where('name', $name)->first();
+                    $productId = $item['product_id'] ?? null;
+                    if (!$productId) continue;
+                    $product = Product::find($productId);
                     if ($product) {
-                        $product->stock = max(0, $product->stock - (int)($item['qty'] ?? 1));
+                        $product->stock = max(0, $product->stock - (int)($item['quantity'] ?? $item['qty'] ?? 1));
                         $product->save();
                     }
                 }
@@ -349,11 +362,11 @@ class AdminController extends Controller
             // Un-marking delivered: restore stock
             if ($oldStatus === 'delivered' && $newStatus !== 'delivered') {
                 foreach (($order->items ?? []) as $item) {
-                    $name = substr((string)($item['name'] ?? ''), 0, 255);
-                    if (!$name) continue;
-                    $product = Product::where('name', $name)->first();
+                    $productId = $item['product_id'] ?? null;
+                    if (!$productId) continue;
+                    $product = Product::find($productId);
                     if ($product) {
-                        $product->stock = $product->stock + (int)($item['qty'] ?? 1);
+                        $product->stock = $product->stock + (int)($item['quantity'] ?? $item['qty'] ?? 1);
                         $product->save();
                     }
                 }
@@ -374,11 +387,11 @@ class AdminController extends Controller
         // If order was delivered, restore stock when deleting
         if ($order->status === 'delivered') {
             foreach (($order->items ?? []) as $item) {
-                $name = substr((string)($item['name'] ?? ''), 0, 255);
-                if (!$name) continue;
-                $product = Product::where('name', $name)->first();
+                $productId = $item['product_id'] ?? null;
+                if (!$productId) continue;
+                $product = Product::find($productId);
                 if ($product) {
-                    $product->stock = $product->stock + (int)($item['qty'] ?? 1);
+                    $product->stock = $product->stock + (int)($item['quantity'] ?? $item['qty'] ?? 1);
                     $product->save();
                 }
             }
@@ -592,12 +605,22 @@ class AdminController extends Controller
         $banner = Banner::find($id);
         if (!$banner) return $this->err('Banner not found', 404);
         if (!$request->hasFile('image')) return $this->err('No image file provided');
+
+        $file = $request->file('image');
+        $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+        if (!in_array($file->getMimeType(), $allowed)) {
+            return $this->err('Only JPEG, PNG, WebP, and GIF images are allowed');
+        }
+        if ($file->getSize() > 10 * 1024 * 1024) {
+            return $this->err('Image must be smaller than 10MB');
+        }
+
         if ($banner->cloudinary_public_id) {
             try { $this->cloudinary()->uploadApi()->destroy($banner->cloudinary_public_id); } catch (\Exception $e) {}
         }
         try {
             $result = $this->cloudinary()->uploadApi()->upload(
-                $request->file('image')->getRealPath(),
+                $file->getRealPath(),
                 ['folder' => 'aura-gifts/banners']
             );
             $banner->image_url = $result['secure_url'];
@@ -746,6 +769,14 @@ class AdminController extends Controller
             return $this->err('Superadmin access required', 403);
         }
         if ($requester->id === $id) return $this->err('Cannot delete your own account');
+
+        $token = request()->header('X-CSRF-Token') ?? request()->input('_token');
+        if (!$token || !hash_equals(session('_token', ''), $token)) {
+            if (!in_array(request()->header('X-Requested-With'), ['XMLHttpRequest'])) {
+                return $this->err('CSRF token mismatch', 419);
+            }
+        }
+
         $target = \App\Models\User::find($id);
         if (!$target) return $this->err('User not found', 404);
         \App\Models\Order::where('user_id', $id)->update(['user_id' => null]);

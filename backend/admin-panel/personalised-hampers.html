@@ -6,14 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aura Admin · Personalised Hampers</title>
   <style>html,body{background:#f8f8f6;}</style>
-  <link rel="stylesheet" href="/admin/static/admin.css?v=19" />
+  <link rel="stylesheet" href="/admin/static/admin.css?v=23" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
-        <a href="http://127.0.0.1:8000" target="_blank" style="text-decoration:none;font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;font-size:1.9rem;display:block;text-align:center;width:100%;"><span style="font-weight:800;color:#9a9a9a;">aura</span><span style="font-weight:400;color:#9a9a9a;">gifts</span></a>
+        <a href="http://localhost:8000" style="text-decoration:none;display:flex;align-items:center;justify-content:center;width:100%;min-height:60px;">
+          <img id="admin-logo-dark" src="" alt="Aura Gifts" style="height:40px;width:auto;display:none;">
+          <span id="admin-logo-text" style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;font-size:1.9rem;"><span style="font-weight:800;color:#9a9a9a;">aura</span><span style="font-weight:400;color:#9a9a9a;">gifts</span></span>
+        </a>
       </div>
       <nav class="sidebar-nav">
         <a href="/admin/dashboard.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
@@ -111,7 +114,7 @@
   </div>
 
   <div id="toast" class="toast"></div>
-  <script src="/admin/static/admin.js?v=11"></script>
+  <script src="/admin/static/admin.js?v=15"></script>
   <script>window.scrollTo(0, 0);</script>
   <script>
     requireAuth();
