@@ -13,28 +13,28 @@ Thumbs.db
 # Kiro
 .kiro/
 
-# ---- backend-php (Laravel) ----
-backend-php/.env
-backend-php/.env.backup
-backend-php/.env.production
-backend-php/auth.json
-backend-php/node_modules/
-backend-php/vendor/
-backend-php/public/build/
-backend-php/public/hot/
-backend-php/public/storage/
-backend-php/public/fonts-manifest.dev.json
-backend-php/storage/*.key
-backend-php/storage/pail/
-backend-php/bootstrap/cache/*.php
-!backend-php/bootstrap/cache/.gitignore
-backend-php/_ide_helper.php
-backend-php/.phpactor.json
-backend-php/.phpunit.result.cache
-backend-php/.phpunit.cache/
-backend-php/Homestead.json
-backend-php/Homestead.yaml
-backend-php/*.log
+# ---- Backend (Laravel) ----
+backend/.env
+backend/.env.backup
+backend/.env.production
+backend/auth.json
+backend/node_modules/
+backend/vendor/
+backend/public/build/
+backend/public/hot/
+backend/public/storage/
+backend/public/fonts-manifest.dev.json
+backend/storage/*.key
+backend/storage/pail/
+backend/bootstrap/cache/*.php
+!backend/bootstrap/cache/.gitignore
+backend/_ide_helper.php
+backend/.phpactor.json
+backend/.phpunit.result.cache
+backend/.phpunit.cache/
+backend/Homestead.json
+backend/Homestead.yaml
+backend/*.log
 
 # Logs
 *.log
