@@ -52,7 +52,7 @@ cd /var/www/aura-gifts
 git clone https://github.com/YOUR_GITHUB/aura-gifts.git .
 
 # Go to backend
-cd backend-php
+cd backend
 
 # Install dependencies
 composer install --no-dev --optimize-autoloader
@@ -141,7 +141,7 @@ server {
     }
 
     location /api {
-        try_files $uri /backend-php/public/index.php?$query_string;
+        try_files $uri /backend/public/index.php?$query_string;
     }
 
     location ~ \.php$ {
@@ -187,9 +187,9 @@ sudo certbot renew --dry-run
 # Fix permissions
 sudo chown -R www-data:www-data /var/www/aura-gifts
 chmod -R 755 /var/www/aura-gifts
-chmod -R 775 /var/www/aura-gifts/backend-php/storage/
-chmod -R 775 /var/www/aura-gifts/backend-php/bootstrap/cache/
-chmod 600 /var/www/aura-gifts/backend-php/.env
+chmod -R 775 /var/www/aura-gifts/backend/storage/
+chmod -R 775 /var/www/aura-gifts/backend/bootstrap/cache/
+chmod 600 /var/www/aura-gifts/backend/.env
 
 # Setup firewall
 sudo ufw enable
@@ -234,7 +234,7 @@ curl -I https://yourdomain.com
 curl https://yourdomain.com/api/status
 
 # Check logs
-sudo tail -f /var/www/aura-gifts/backend-php/storage/logs/laravel.log
+sudo tail -f /var/www/aura-gifts/backend/storage/logs/laravel.log
 sudo tail -f /var/log/nginx/error.log
 ```
 
@@ -264,7 +264,7 @@ sudo tail -f /var/log/nginx/error.log
 
 **500 Error:**
 ```bash
-tail -f /var/www/aura-gifts/backend-php/storage/logs/laravel.log
+tail -f /var/www/aura-gifts/backend/storage/logs/laravel.log
 ```
 
 **Database Error:**
@@ -280,13 +280,13 @@ sudo systemctl restart nginx
 
 **Permission Denied:**
 ```bash
-sudo chown -R www-data:www-data /var/www/aura-gifts/backend-php/storage/
+sudo chown -R www-data:www-data /var/www/aura-gifts/backend/storage/
 ```
 
 **CORS Errors:**
 ```bash
 # Check .env
-grep CORS /var/www/aura-gifts/backend-php/.env
+grep CORS /var/www/aura-gifts/backend/.env
 # Then run:
 php artisan config:clear
 ```
@@ -297,7 +297,7 @@ php artisan config:clear
 
 ```bash
 # View logs in real-time
-tail -f /var/www/aura-gifts/backend-php/storage/logs/laravel.log
+tail -f /var/www/aura-gifts/backend/storage/logs/laravel.log
 
 # Restart services
 sudo systemctl restart nginx php8.3-fpm
@@ -318,7 +318,7 @@ sudo systemctl restart mysql
 php artisan cache:clear
 
 # Deploy new code
-cd /var/www/aura-gifts && sudo -u deploy git pull origin main && cd backend-php && php artisan migrate
+cd /var/www/aura-gifts && sudo -u deploy git pull origin main && cd backend && php artisan migrate
 
 # Update certificates (manual)
 sudo certbot renew --force-renewal

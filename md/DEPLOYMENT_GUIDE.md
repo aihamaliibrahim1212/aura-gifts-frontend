@@ -136,7 +136,7 @@ EXIT;
 
 ### Configure Laravel
 
-Edit `/var/www/aura-gifts/backend-php/.env`:
+Edit `/var/www/aura-gifts/backend/.env`:
 
 ```env
 APP_NAME="Aura Gifts"
@@ -176,14 +176,14 @@ GOOGLE_REDIRECT_URI=https://yourdomain.com/api/auth/google/callback
 ### Generate App Key
 
 ```bash
-cd /var/www/aura-gifts/backend-php
+cd /var/www/aura-gifts/backend
 php artisan key:generate
 ```
 
 ### Run Migrations
 
 ```bash
-cd /var/www/aura-gifts/backend-php
+cd /var/www/aura-gifts/backend
 php artisan migrate --force
 ```
 
@@ -195,7 +195,7 @@ php artisan migrate --force
 
 ```bash
 # Set correct permissions
-cd /var/www/aura-gifts/backend-php
+cd /var/www/aura-gifts/backend
 sudo chown -R deploy:www-data .
 sudo chmod -R 755 .
 sudo chmod -R 775 storage/ bootstrap/cache/
@@ -314,7 +314,7 @@ server {
     }
 
     location /api {
-        try_files $uri /backend-php/public/index.php?$query_string;
+        try_files $uri /backend/public/index.php?$query_string;
     }
 
     location ~ \.php$ {
@@ -351,7 +351,7 @@ sudo systemctl restart nginx
 ```bash
 cd /var/www/aura-gifts
 sudo -u deploy git clone git@github.com:YOUR_USERNAME/aura-gifts.git .
-cd backend-php
+cd backend
 ```
 
 ### Step 2: Install Dependencies
@@ -390,8 +390,8 @@ php artisan optimize
 ```bash
 sudo chown -R www-data:www-data /var/www/aura-gifts
 chmod -R 755 /var/www/aura-gifts
-chmod -R 775 /var/www/aura-gifts/backend-php/storage
-chmod -R 775 /var/www/aura-gifts/backend-php/bootstrap/cache
+chmod -R 775 /var/www/aura-gifts/backend/storage
+chmod -R 775 /var/www/aura-gifts/backend/bootstrap/cache
 ```
 
 ### Step 7: Setup Frontend
@@ -531,7 +531,7 @@ aws s3 cp $BACKUP_DIR/db_$DATE.sql.gz s3://your-backup-bucket/
 
 #### Email Alerts
 
-Create `/var/www/aura-gifts/backend-php/app/Console/Kernel.php` schedule:
+Create `/var/www/aura-gifts/backend/app/Console/Kernel.php` schedule:
 
 ```php
 $schedule->command('queue:work')->everyMinute()->onFailure(function () {
@@ -551,7 +551,7 @@ sudo nano /etc/logrotate.d/aura-gifts
 Content:
 
 ```
-/var/www/aura-gifts/backend-php/storage/logs/*.log {
+/var/www/aura-gifts/backend/storage/logs/*.log {
     daily
     rotate 14
     compress
@@ -575,7 +575,7 @@ df -h
 ### Regular Maintenance Tasks
 
 **Weekly:**
-- [ ] Review error logs: `/var/www/aura-gifts/backend-php/storage/logs/`
+- [ ] Review error logs: `/var/www/aura-gifts/backend/storage/logs/`
 - [ ] Check disk usage: `df -h`
 - [ ] Verify backups completed
 
@@ -600,18 +600,18 @@ df -h
 
 ```bash
 # Check error logs
-tail -f /var/www/aura-gifts/backend-php/storage/logs/laravel.log
+tail -f /var/www/aura-gifts/backend/storage/logs/laravel.log
 
 # Check Nginx logs
 sudo tail -f /var/log/nginx/error.log
 
 # Check permissions
-ls -la /var/www/aura-gifts/backend-php/storage/
-ls -la /var/www/aura-gifts/backend-php/bootstrap/
+ls -la /var/www/aura-gifts/backend/storage/
+ls -la /var/www/aura-gifts/backend/bootstrap/
 
 # Fix permissions
-sudo chmod -R 775 /var/www/aura-gifts/backend-php/storage/
-sudo chmod -R 775 /var/www/aura-gifts/backend-php/bootstrap/cache/
+sudo chmod -R 775 /var/www/aura-gifts/backend/storage/
+sudo chmod -R 775 /var/www/aura-gifts/backend/bootstrap/cache/
 ```
 
 #### 2. Database Connection Error
@@ -621,7 +621,7 @@ sudo chmod -R 775 /var/www/aura-gifts/backend-php/bootstrap/cache/
 mysql -h 127.0.0.1 -u aura_user -p -e "SELECT 1;"
 
 # Check .env file
-cat /var/www/aura-gifts/backend-php/.env | grep DB_
+cat /var/www/aura-gifts/backend/.env | grep DB_
 
 # Verify MySQL running
 sudo systemctl status mysql
@@ -634,7 +634,7 @@ sudo systemctl restart mysql
 
 Check `.env`:
 ```bash
-grep CORS_ALLOWED_ORIGINS /var/www/aura-gifts/backend-php/.env
+grep CORS_ALLOWED_ORIGINS /var/www/aura-gifts/backend/.env
 ```
 
 Should include your domain:
@@ -671,7 +671,7 @@ php artisan queue:failed
 php artisan queue:retry all
 
 # Check credentials in .env
-grep MAIL_ /var/www/aura-gifts/backend-php/.env
+grep MAIL_ /var/www/aura-gifts/backend/.env
 ```
 
 #### 6. Git Deployment Issues
@@ -719,7 +719,7 @@ cd aura-gifts
 ### 3. Setup Local Environment
 
 ```bash
-cd backend-php
+cd backend
 
 # Create .env from production
 cp .env.example .env
