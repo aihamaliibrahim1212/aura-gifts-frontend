@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>*{box-sizing:border-box;margin:0;padding:0}html{background:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;color:#1a1a1a;overflow-x:hidden}body{background:#fff;overflow-x:hidden}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account · Aura Gifts</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717074/aura-gifts/logos/hky5k3sgrupvx5jtxqrh.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css?v=32">
+    <link rel="stylesheet" href="../css/auth.css?v=24">
+    <!-- Block render until auth is confirmed — prevents flash of page content before redirect -->
+    <script>
+        (function() {
+            var token = localStorage.getItem('aura_user_token');
+            var user  = null;
+            try { user = JSON.parse(localStorage.getItem('aura_user')); } catch(e) {}
+            if (!token || !user) {
+                var redirect = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.replace('login.html?redirect=' + redirect);
+            } else {
+                // Show the page immediately — full validation happens async below
+                document.documentElement.style.visibility = 'visible';
+            }
+        })();
+    </script>
+    <!-- Hide until the inline script above confirms auth -->
+    <style>html { visibility: hidden; }</style>
+</head>
+<body>
+
+    <header id="header">
+        <div class="top-bar" id="top-bar-text">FOR QUERIES PLEASE CALL 9992070</div>
+        <div class="header-search-bar">
+            <a href="../index.html" class="logo">
+                <img src="https://res.cloudinary.com/dat7p3xuv/image/upload/v1780717076/aura-gifts/logos/tdpoqlfhze5zkuvdppgw.jpg" alt="Aura Gifts" class="logo-wide" id="site-logo-wide">
+            </a>
+            <div class="header-right">
+                <button id="auth-nav-btn" class="auth-header-btn" style="background:none;border:none;cursor:pointer;padding:0px;margin:0px;display:flex;align-items:center;gap:8px;margin-right:-40px;"><i class="fas fa-user" style="font-size:1rem;color:#787878;"></i></button>
+                <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <nav class="navbar" id="desktop-nav">
+                <div class="nav-links">
+                    <a href="hampers.html">Instant Hampers</a>
+                    <a href="personalised-hampers.html">Personalised Hampers</a>
+                    <a href="create-your-own.html">Create Your Own</a>
+                    <a href="corporate-orders.html">Corporate Orders</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <nav>
+            <a href="hampers.html" onclick="closeMobileMenu()">Instant Hampers</a>
+            <a href="personalised-hampers.html" onclick="closeMobileMenu()">Personalised Hampers</a>
+            <a href="create-your-own.html" onclick="closeMobileMenu()">Create Your Own</a>
+            <a href="corporate-orders.html" onclick="closeMobileMenu()">Corporate Orders</a>
+            <a href="faq.html" onclick="closeMobileMenu()">FAQ</a>
+        </nav>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px;">
+        <div style="background:#fff;border-radius:16px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center;position:relative;">
+            <button onclick="closeAuthModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#ccc;transition:color 0.2s;width:32px;height:32px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.color='#999'" onmouseout="this.style.color='#ccc'"><i class="fas fa-times"></i></button>
+            <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:4px;color:#1a1a1a;letter-spacing:0.3px;">Welcome</h2>
+            <p style="font-size:0.85rem;color:#999;margin-bottom:24px;line-height:1.5;">Sign in to your account or create a new one</p>
+            <a href="login.html" style="display:block;width:100%;padding:13px 14px;background:#b8a898;color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:background 0.2s;text-align:center;">Sign In</a>
+            <a href="register.html" style="display:block;width:100%;padding:13px 14px;background:none;border:1.5px solid #e0d8cc;color:#b8a898;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='#b8a898';this.style.background='#faf8f5'" onmouseout="this.style.borderColor='#e0d8cc';this.style.background='none'">Create Account</a>
+        </div>
+    </div>
+
+    <main class="account-page page-top-offset">
+        <div class="container">
+
+            <!-- Account header -->
+            <div class="account-header">
+                <div class="account-avatar" id="account-avatar">?</div>
+                <div class="account-info">
+                    <h1 id="account-name">Loading…</h1>
+                    <p id="account-email" style="color:var(--text-light);font-size:clamp(0.72rem,2.5vw,0.9rem);margin:2px 0 6px;"></p>
+                    <div id="account-badges" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+                </div>
+                <div style="margin-left:auto;display:flex;flex-direction:row;gap:10px;align-items:center;flex-shrink:0;" class="acct-btns">
+                    <a id="admin-panel-btn" href="/admin/dashboard.html" class="btn btn-outline acct-action-btn" style="display:none;">
+                        <i class="fas fa-shield-alt"></i> Admin Panel
+                    </a>
+                    <button class="btn btn-outline acct-action-btn" onclick="authLogout('login.html')">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="account-tabs">
+                <button class="tab-btn active" onclick="showTab('orders')" id="tab-orders">
+                    <i class="fas fa-box"></i> Order History
+                </button>
+                <button class="tab-btn" onclick="showTab('profile')" id="tab-profile">
+                    <i class="fas fa-user"></i> Profile Settings
+                </button>
+            </div>
+
+            <!-- Orders tab -->
+            <div class="tab-panel" id="panel-orders">
+                <div id="orders-loading" style="text-align:center;padding:48px;color:var(--text-light);">
+                    <i class="fas fa-spinner fa-spin" style="font-size:1.5rem;"></i>
+                    <p style="margin-top:12px;">Loading your orders…</p>
+                </div>
+                <div id="orders-empty" style="display:none;text-align:center;padding:64px 24px;">
+                    <div style="font-size:3rem;color:var(--border-gray);margin-bottom:16px;"><i class="fas fa-box-open"></i></div>
+                    <h3 style="font-family:'Playfair Display',serif;margin-bottom:8px;">No orders yet</h3>
+                    <p style="color:var(--text-light);margin-bottom:24px;">Your past orders will appear here once you've placed one.</p>
+                    <a href="hampers.html" class="btn btn-gold">Browse Hampers</a>
+                </div>
+                <div id="orders-list"></div>
+            </div>
+
+            <!-- Profile tab -->
+            <div class="tab-panel" id="panel-profile" style="display:none;">
+                <div class="profile-grid">
+
+                    <!-- Personal Info + Delivery in one card -->
+                    <div class="profile-section" style="grid-column:1/-1;">
+                        <h3 class="section-heading"><i class="fas fa-user-circle"></i> Profile Settings</h3>
+
+                        <div class="auth-error" id="profile-error" role="alert" style="display:none;"></div>
+                        <div class="auth-success" id="profile-success" role="status" style="display:none;"></div>
+
+                        <form id="profile-form" novalidate>
+
+                            <!-- Personal -->
+                            <p style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:14px;">Personal</p>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-name">Full name</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-user input-icon"></i>
+                                        <input type="text" id="profile-name" placeholder="Your full name" maxlength="200">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label>Email address</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-envelope input-icon"></i>
+                                        <input type="email" id="profile-email" disabled style="background:var(--off-white);cursor:not-allowed;">
+                                    </div>
+                                    <div id="email-verify-notice" style="display:none;margin-top:5px;font-size:0.78rem;color:#e65100;">
+                                        <i class="fas fa-exclamation-circle"></i> Email not verified.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:14px;">
+                                <label>Sign-in method</label>
+                                <div id="provider-display" style="padding:10px 14px;background:var(--off-white);border:1.5px solid var(--border-gray);border-radius:8px;font-size:0.88rem;color:var(--text-mid);display:flex;align-items:center;gap:8px;"></div>
+                            </div>
+
+                            <!-- Delivery -->
+                            <div style="border-top:1.5px solid var(--border-gray);margin:24px 0 18px;padding-top:20px;">
+                                <p style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:14px;"><i class="fas fa-map-marker-alt" style="margin-right:5px;"></i>Delivery Details</p>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-phone">Phone number</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-phone input-icon"></i>
+                                        <input type="tel" id="profile-phone" placeholder="e.g. 9991234" maxlength="30">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-island">Island</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-map-pin input-icon"></i>
+                                        <input type="text" id="profile-island" placeholder="e.g. Maafushi" maxlength="100">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-address">Address</label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-home input-icon"></i>
+                                    <input type="text" id="profile-address" placeholder="House / flat number, street" maxlength="300">
+                                </div>
+                            </div>
+
+                            <!-- Boat -->
+                            <div style="border-top:1.5px solid var(--border-gray);margin:8px 0 18px;padding-top:20px;">
+                                <p style="font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dark);margin-bottom:4px;"><i class="fas fa-ship" style="margin-right:5px;"></i>Boat Details</p>
+                                <p style="font-size:0.78rem;color:var(--text-light);margin-bottom:14px;">Leave empty if not ordering via boat.</p>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-boat-name">Boat name</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-anchor input-icon"></i>
+                                        <input type="text" id="profile-boat-name" placeholder="Boat name" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin:0;">
+                                    <label for="profile-boat-number">Boat number</label>
+                                    <div class="input-wrap">
+                                        <i class="fas fa-hashtag input-icon"></i>
+                                        <input type="text" id="profile-boat-number" placeholder="Reg. number" maxlength="50">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:24px;">
+                                <span id="profile-autosave-status" style="font-size:0.78rem;color:var(--text-light);"></span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Hidden sections (kept for future use) -->
+                    <div class="profile-section" id="change-pw-section" style="display:none;">
+                        <h3 class="section-heading"><i class="fas fa-lock"></i> Change Password</h3>
+                        <div class="auth-error" id="pw-error" role="alert" style="display:none;"></div>
+                        <div class="auth-success" id="pw-success" role="status" style="display:none;"></div>
+                        <form id="pw-form" novalidate>
+                            <div class="form-group" id="current-pw-group">
+                                <label for="current-pw">Current password</label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="current-pw" placeholder="Your current password" maxlength="255">
+                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('current-pw', this)" aria-label="Show password"><i class="fas fa-eye"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-pw">New password</label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="new-pw" placeholder="At least 8 characters" maxlength="255">
+                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('new-pw', this)" aria-label="Show password"><i class="fas fa-eye"></i></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-pw">Confirm new password</label>
+                                <div class="input-wrap">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="confirm-pw" placeholder="Repeat new password" maxlength="255">
+                                    <button type="button" class="password-toggle" onclick="togglePwVisibility('confirm-pw', this)" aria-label="Show password"><i class="fas fa-eye"></i></button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-gold" id="pw-save-btn">
+                                <span class="btn-text"><i class="fas fa-key"></i> Update Password</span>
+                                <span class="btn-spinner" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="profile-section danger-zone" id="danger-zone-section" style="display:none;">
+                        <h3 class="section-heading" style="color:#c62828;"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                        <p style="font-size:0.875rem;color:var(--text-mid);margin-bottom:16px;">Deleting your account is permanent and cannot be undone. Your order history will be anonymised.</p>
+                        <button class="btn" style="background:#fce4e4;color:#c62828;border:1.5px solid #f5c6c6;" onclick="showDeleteAccountDialog()">
+                            <i class="fas fa-trash-alt"></i> Delete My Account
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">
+                        <span style="font-family:'Avenir Next','Avenir','Nunito',sans-serif;letter-spacing:0.5px;">
+                            <span style="font-weight:800;color:white;">aura</span><span style="font-weight:400;color:rgba(255,255,255,0.7);">gifts</span>
+                        </span>
+                    </a>
+                    <p style="margin-top:14px;">Art of refined gifting. Luxury, thoughtful, and deeply personal gifts for every occasion. Corporate orders welcome.</p>
+                    <div class="footer-socials">
+                        <a href="https://www.instagram.com/auragifts.mv/" target="_blank" class="social-btn" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="hampers.html">All Hampers</a></li>
+                        <li><a href="hampers.html">Instant Hampers</a></li>
+                        <li><a href="personalised-hampers.html">Personalised Hampers</a></li>
+                        <li><a href="create-your-own.html">Create Your Own</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="corporate-orders.html">Corporate Orders</a></li>
+                        <li><a href="mailto:aura.gifts.mv@gmail.com">aura.gifts.mv@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="justify-content:center;">
+                <p>&copy; 2025 Aura Gifts. Art of refined gifting.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/api-cache.js?v=31"></script>
+    <script src="../js/auth.js?v=22"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ── Auth guard ─────────────────────────────────────────────────────
+        const currentUser = authGetUser();
+        if (currentUser) {
+            // Always hide admin button until server confirms superadmin
+            document.getElementById('admin-panel-btn').style.display = 'none';
+            initAccountPage(currentUser);
+            authFetch('/api/user/me').then(function(res) {
+                if (res.ok && res.data && res.data.success) {
+                    const fresh = res.data.data;
+                    authSetSession(authGetToken(), fresh);
+                    document.getElementById('admin-panel-btn').style.display =
+                        fresh.role === 'superadmin' ? 'inline-flex' : 'none';
+                } else {
+                    document.getElementById('admin-panel-btn').style.display = 'none';
+                }
+            }).catch(function() {
+                document.getElementById('admin-panel-btn').style.display = 'none';
+            });
+        }
+
+        function initAccountPage(user) {
+            authUpdateNav();
+
+            // Fill header
+            document.getElementById('account-name').textContent  = user.name || 'My Account';
+            document.getElementById('account-email').textContent = user.email || '';
+
+            // Avatar
+            const avatarEl = document.getElementById('account-avatar');
+            if (user.avatar_url) {
+                avatarEl.innerHTML = `<img src="${_escAttr(user.avatar_url)}" alt="${_esc(user.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+            } else {
+                avatarEl.textContent = _initials(user.name);
+            }
+
+            // Badges
+            const badgesEl = document.getElementById('account-badges');
+            if (user.role === 'superadmin') {
+                badgesEl.innerHTML += `<span class="account-badge admin-badge"><i class="fas fa-shield-alt"></i> Admin</span>`;
+                document.getElementById('admin-panel-btn').style.display = 'inline-flex';
+            } else {
+                document.getElementById('admin-panel-btn').style.display = 'none';
+            }
+            if (!user.email_verified) {
+                badgesEl.innerHTML += `<span class="account-badge warn-badge"><i class="fas fa-exclamation-circle"></i> Email not verified</span>`;
+            }
+            if (user.provider === 'google') {
+                badgesEl.innerHTML += `<span class="account-badge google-badge"><i class="fab fa-google"></i> Google account</span>`;
+            }
+
+            // Profile form
+            document.getElementById('profile-name').value  = user.name  || '';
+            document.getElementById('profile-email').value = user.email || '';
+            document.getElementById('profile-phone').value       = user.phone       || '';
+            document.getElementById('profile-atoll').value       = user.atoll       || '';
+            document.getElementById('profile-island').value      = user.island      || '';
+            document.getElementById('profile-address').value     = user.address     || '';
+            document.getElementById('profile-boat-name').value   = user.boat_name   || '';
+            document.getElementById('profile-boat-number').value = user.boat_number || '';
+
+            // Email verify notice
+            if (!user.email_verified) {
+                document.getElementById('email-verify-notice').style.display = 'block';
+            }
+
+            // Provider display
+            const providerMap = {
+                email:        '<i class="fas fa-envelope" style="color:var(--gold-dark);"></i> Email & password',
+                google:       '<i class="fab fa-google" style="color:#4285F4;"></i> Google',
+                email_google: '<i class="fas fa-envelope" style="color:var(--gold-dark);"></i> Email + <i class="fab fa-google" style="color:#4285F4;"></i> Google',
+            };
+            document.getElementById('provider-display').innerHTML = providerMap[user.provider] || user.provider;
+
+            // Hide change-password for Google-only accounts
+            if (user.provider === 'google') {
+                document.getElementById('current-pw-group').style.display = 'none';
+            }
+
+            // Hide change-password and delete account for all users
+            document.getElementById('change-pw-section').style.display = 'none';
+            document.getElementById('danger-zone-section').style.display = 'none';
+
+            // Load orders
+            loadOrders();
+        }
+
+        // ── Orders ─────────────────────────────────────────────────────────
+        async function loadOrders() {
+            try {
+                const res = await authFetch('/api/user/orders');
+                document.getElementById('orders-loading').style.display = 'none';
+
+                if (!res.ok || !res.data.success) {
+                    document.getElementById('orders-list').innerHTML = `
+                        <div style="text-align:center;padding:48px;color:var(--text-light);">
+                            <i class="fas fa-wifi" style="font-size:2rem;opacity:0.3;"></i>
+                            <p style="margin-top:12px;">Could not load orders. Please try again later.</p>
+                        </div>`;
+                    return;
+                }
+
+                const orders = res.data.data || [];
+                if (orders.length === 0) {
+                    document.getElementById('orders-empty').style.display = 'block';
+                    return;
+                }
+
+                const statusConfig = {
+                    pending:   { color:'#e65100', bg:'#fff3e0', icon:'fa-clock',       label:'Pending' },
+                    confirmed: { color:'#1565c0', bg:'#e3f2fd', icon:'fa-check-circle', label:'Confirmed' },
+                    delivered: { color:'#2e7d32', bg:'#e8f5e9', icon:'fa-truck',        label:'Delivered' },
+                    cancelled: { color:'#c62828', bg:'#fce4e4', icon:'fa-times-circle', label:'Cancelled' },
+                };
+
+                document.getElementById('orders-list').innerHTML = orders.map(order => {
+                    const sc = statusConfig[order.status] || statusConfig.pending;
+                    const items = (order.items || []).map(i => `${i.qty}× ${_esc(i.name)}`).join(', ');
+                    const date  = new Date(order.created_at).toLocaleDateString('en-GB', {
+                        day:'2-digit', month:'short', year:'numeric'
+                    });
+                    return `
+                    <div class="order-card">
+                        <div class="order-card-header">
+                            <div>
+                                <span class="order-id">#${order.id}</span>
+                                <span class="order-date">${date}</span>
+                            </div>
+                            <span class="order-status-badge" style="background:${sc.bg};color:${sc.color};">
+                                <i class="fas ${sc.icon}"></i> ${sc.label}
+                            </span>
+                        </div>
+                        <p class="order-items">${items}</p>
+                        <div class="order-card-footer">
+                            <span class="order-total">MVR ${order.total_mvr ? parseFloat(order.total_mvr).toLocaleString('en', {minimumFractionDigits:2}) : 'N/A'}</span>
+                            ${order.notes ? `<span class="order-note"><i class="fas fa-sticky-note"></i> ${_esc(order.notes.substring(0,60))}${order.notes.length > 60 ? '…' : ''}</span>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                document.getElementById('orders-loading').style.display = 'none';
+                document.getElementById('orders-list').innerHTML = `
+                    <div style="text-align:center;padding:48px;color:var(--text-light);">
+                        <i class="fas fa-exclamation-circle" style="font-size:2rem;opacity:0.3;"></i>
+                        <p style="margin-top:12px;">Could not load orders. Please try again later.</p>
+                    </div>`;
+            }
+        }
+
+        // ── Profile auto-save on blur ───────────────────────────────────────
+        let _profileSaveTimer = null;
+        function scheduleProfileSave() {
+            clearTimeout(_profileSaveTimer);
+            _profileSaveTimer = setTimeout(saveProfile, 800);
+        }
+
+        async function saveProfile() {
+            const name = document.getElementById('profile-name').value.trim();
+            if (!name || name.length < 2) return;
+
+            const payload = {
+                name,
+                phone:       document.getElementById('profile-phone').value.trim(),
+                atoll:       document.getElementById('profile-atoll').value.trim(),
+                island:      document.getElementById('profile-island').value.trim(),
+                address:     document.getElementById('profile-address').value.trim(),
+                boat_name:   document.getElementById('profile-boat-name').value.trim(),
+                boat_number: document.getElementById('profile-boat-number').value.trim(),
+            };
+
+            const statusEl = document.getElementById('profile-autosave-status');
+            if (statusEl) statusEl.textContent = 'Saving…';
+
+            try {
+                const res = await authFetch('/api/user/profile', 'PUT', payload);
+                if (res.ok && res.data.success) {
+                    const updatedUser = res.data.data;
+                    authSetSession(authGetToken(), updatedUser);
+                    authUpdateNav();
+                    document.getElementById('account-name').textContent = updatedUser.name;
+                    if (statusEl) {
+                        statusEl.textContent = 'Saved';
+                        setTimeout(() => { statusEl.textContent = ''; }, 2000);
+                    }
+                }
+            } catch (_) {}
+        }
+
+        // Attach blur listeners to all profile fields
+        ['profile-name','profile-phone','profile-atoll','profile-island',
+         'profile-address','profile-boat-name','profile-boat-number'].forEach(function(id) {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('blur', scheduleProfileSave);
+        });
+
+        // Keep form submit as fallback (Enter key etc)
+        document.getElementById('profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveProfile();
+        });
+
+        // ── Password form ───────────────────────────────────────────────────
+        document.getElementById('pw-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const user      = authGetUser();
+            const currentPw = document.getElementById('current-pw').value;
+            const newPw     = document.getElementById('new-pw').value;
+            const confirmPw = document.getElementById('confirm-pw').value;
+            const errEl     = document.getElementById('pw-error');
+            const succEl    = document.getElementById('pw-success');
+
+            authClearError(errEl);
+            succEl.style.display = 'none';
+
+            if (newPw.length < 8) {
+                authShowError(errEl, 'New password must be at least 8 characters.'); return;
+            }
+            if (!/[A-Z]/.test(newPw) || !/[0-9]/.test(newPw)) {
+                authShowError(errEl, 'Password must have at least one uppercase letter and one number.'); return;
+            }
+            if (newPw !== confirmPw) {
+                authShowError(errEl, 'Passwords do not match.'); return;
+            }
+
+            const payload = { new_password: newPw };
+            if (user && user.provider !== 'google' && currentPw) payload.current_password = currentPw;
+
+            setFormLoading('pw-save-btn', true);
+            try {
+                const res = await authFetch('/api/user/profile', 'PUT', payload);
+                if (res.ok && res.data.success) {
+                    succEl.textContent = 'Password updated. Other sessions have been signed out.';
+                    succEl.style.display = 'block';
+                    document.getElementById('pw-form').reset();
+                    setTimeout(() => succEl.style.display = 'none', 4000);
+                } else {
+                    authShowError(errEl, res.data.error || 'Update failed. Please try again.');
+                }
+            } catch (err) {
+                authShowError(errEl, 'Could not connect. Please try again.');
+            }
+            setFormLoading('pw-save-btn', false);
+        });
+
+        // ── Delete account dialog ───────────────────────────────────────────
+        window.showDeleteAccountDialog = function() {
+            const user = authGetUser();
+            const needsPw = user && user.provider !== 'google' && user.provider !== 'email_google';
+
+            const overlay = document.createElement('div');
+            overlay.id = 'delete-overlay';
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:16px;';
+            overlay.innerHTML = `
+                <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                        <div style="width:40px;height:40px;border-radius:50%;background:#fce4e4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-trash-alt" style="color:#c62828;"></i>
+                        </div>
+                        <h3 style="margin:0;font-size:1.1rem;font-weight:700;">Delete Account</h3>
+                    </div>
+                    <p style="font-size:0.875rem;color:var(--text-mid);margin-bottom:16px;">This action is permanent and cannot be undone. Your order history will be anonymised.</p>
+                    ${needsPw ? `
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label style="font-size:0.82rem;font-weight:600;display:block;margin-bottom:4px;">Enter your password to confirm</label>
+                        <div class="input-wrap">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="delete-pw-input" placeholder="Your password" style="width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--border-gray);border-radius:8px;font-size:0.9rem;outline:none;font-family:inherit;">
+                        </div>
+                    </div>` : ''}
+                    <div id="delete-error" style="display:none;color:#c62828;font-size:0.82rem;margin-bottom:12px;"></div>
+                    <div style="display:flex;gap:10px;justify-content:flex-end;">
+                        <button onclick="document.getElementById('delete-overlay').remove()" style="padding:9px 18px;border:1.5px solid var(--border-gray);border-radius:7px;background:#fff;font-size:0.85rem;font-weight:600;cursor:pointer;color:var(--text-mid);">Cancel</button>
+                        <button id="delete-confirm-btn" onclick="confirmDeleteAccount(${needsPw})" style="padding:9px 18px;border:none;border-radius:7px;background:#c62828;color:#fff;font-size:0.85rem;font-weight:600;cursor:pointer;">Delete Account</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(overlay);
+        }
+
+        window.confirmDeleteAccount = async function(needsPw) {
+            const errEl = document.getElementById('delete-error');
+            const payload = {};
+
+            if (needsPw) {
+                const pw = document.getElementById('delete-pw-input').value;
+                if (!pw) { errEl.textContent = 'Please enter your password.'; errEl.style.display = 'block'; return; }
+                payload.password = pw;
+            }
+
+            const btn = document.getElementById('delete-confirm-btn');
+            btn.disabled = true; btn.textContent = 'Deleting…';
+
+            try {
+                const res = await authFetch('/api/user/account', 'DELETE', payload);
+                if (res.ok && res.data.success) {
+                    authClearSession();
+                    window.location.href = '../index.html';
+                } else {
+                    errEl.textContent = res.data.error || 'Failed to delete account.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false; btn.textContent = 'Delete Account';
+                }
+            } catch (err) {
+                errEl.textContent = 'Could not connect. Please try again.';
+                errEl.style.display = 'block';
+                btn.disabled = false; btn.textContent = 'Delete Account';
+            }
+        }
+
+        // ── Tab switching ───────────────────────────────────────────────────
+        window.showTab = function(tab) {
+            document.getElementById('panel-orders').style.display  = tab === 'orders'  ? 'block' : 'none';
+            document.getElementById('panel-profile').style.display = tab === 'profile' ? 'block' : 'none';
+            document.getElementById('tab-orders').classList.toggle('active', tab === 'orders');
+            document.getElementById('tab-profile').classList.toggle('active', tab === 'profile');
+        };
+
+    }); // end DOMContentLoaded
+
+        // ── Global helpers (called from inline onclick attributes) ────────────
+        function setFormLoading(btnId, state) {
+            const btn = document.getElementById(btnId);
+            btn.disabled = state;
+            btn.querySelector('.btn-text').style.display    = state ? 'none' : 'inline-flex';
+            btn.querySelector('.btn-spinner').style.display = state ? 'inline' : 'none';
+        }
+
+        function togglePwVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon  = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text'; icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password'; icon.className = 'fas fa-eye';
+            }
+        }
+
+        function _esc(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+        function _escAttr(str) { return _esc(str).replace(/'/g,'&#039;'); }
+        function _initials(name) { return (name || '?').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase(); }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+            document.getElementById('mobile-menu-overlay').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('open');
+            document.body.style.overflow = document.getElementById('mobile-menu').classList.contains('open') ? 'hidden' : '';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('mobile-menu-overlay').classList.remove('open');
+            document.getElementById('hamburger').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Header scroll shadow — matches main site behaviour
+        window.addEventListener('scroll', function() {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+        }, { passive: true });
+    </script>
+    <script>
+    function openAuthModal() {
+        document.getElementById('auth-modal').style.display = 'flex';
+    }
+    function closeAuthModal() {
+        document.getElementById('auth-modal').style.display = 'none';
+    }
+    document.getElementById('auth-modal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeAuthModal();
+    });
+    </script>
+</body>
+</html>
