@@ -13,7 +13,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── Offline check disabled ─────────────────────────────────────────────────────────
-// (removed maintenance redirect - kept API_BASE as source of truth)
+// Server is responsible for its own status monitoring
 
 // ── Scroll position save/restore ─────────────────────────────────────────
 (function() {
