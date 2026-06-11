@@ -67,6 +67,7 @@ class AdminController extends Controller
         $user = AdminUser::where('username', $login)->orWhere('email', $login)->first();
 
         if (!$user || !$user->is_active) {
+            Hash::check($password, '$2y$12$dummyhashvaluefortimingequalityxxxx');
             return $this->err('Invalid credentials', 401);
         }
 
